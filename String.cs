@@ -57,7 +57,7 @@ namespace Penguin.Reflection.Extensions
 
                 if (NumericString)
                 {
-                    return System.Convert.ChangeType(s, System.Enum.GetUnderlyingType(t));
+                    return Enum.Parse(t, s);
                 }
                 else if (IgnoreCase)
                 {
