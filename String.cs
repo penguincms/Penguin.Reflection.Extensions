@@ -28,6 +28,12 @@ namespace Penguin.Reflection.Extensions
         /// <returns></returns>
         public static object Convert(this string s, Type t, bool IgnoreCase = false)
         {
+
+            if(t == typeof(string))
+            {
+                return s;
+            }
+
             if (t == typeof(bool))
             {
                 if (s == "1")
