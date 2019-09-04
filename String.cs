@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Penguin.Reflection.Extensions
 {
@@ -86,9 +88,37 @@ namespace Penguin.Reflection.Extensions
             }
             else
             {
-                return System.Convert.ChangeType(s, t);
+                if (!CantChange.Contains(t))
+                {
+                    try
+                    {
+                        return System.Convert.ChangeType(s, t);
+                    }
+                    catch (InvalidCastException)
+                    {
+                        CantChange.Add(t);
+                    }
+                }
+
+                foreach(MethodInfo m in t.GetMethods())
+                {
+                    if(m.Name == "Parse" && m.IsStatic)
+                    {
+
+                        ParameterInfo[] Params = m.GetParameters();
+
+                        if(Params.Count() == 1 && Params.Single().ParameterType == typeof(string))
+                        {
+                            return m.Invoke(null, new object[] { s });
+                        }
+                    }
+                }
             }
+
+            throw new Exception($"No valid cast path known for type {t}");
         }
+
+        private static HashSet<Type> CantChange { get; set; } = new HashSet<Type>();
 
         #endregion Methods
     }
