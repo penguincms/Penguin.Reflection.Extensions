@@ -45,25 +45,28 @@ namespace Penguin.Reflection.Extensions
                 else if (s == "0")
                 {
                     return false;
+                } else
+                {
+                    return bool.Parse(s);
                 }
             }
 
             //I feel like this could be done better by leveraging system types.
             if (string.IsNullOrWhiteSpace(s) && t.IsValueType)
             {
-                return t.GetDefaultValue();
+                if (t.IsValueType)
+                {
+                    return t.GetDefaultValue();
+                } else
+                {
+                    return null;
+                }
             }
 
-            if (s is null && !t.IsValueType)
+            if (t.IsEnum)
             {
-                return null;
-            }
 
-            if (t.IsSubclassOf(typeof(System.Enum)))
-            {
-                bool NumericString = "0123456789".Contains(s.First());
-
-                if (NumericString)
+                if (char.IsDigit(s[0]))
                 {
                     return Enum.Parse(t, s);
                 }
