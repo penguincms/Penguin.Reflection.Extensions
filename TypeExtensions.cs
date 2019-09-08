@@ -12,8 +12,6 @@ namespace Penguin.Reflection.Extensions
     public static class TypeExtensions
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
-        #region Methods
-
         /// <summary>
         /// Returns a stack of all base types excluding the end type (like object)
         /// </summary>
@@ -333,7 +331,5 @@ namespace Penguin.Reflection.Extensions
 
             return false;
         }
-
-        #endregion Methods
     }
 }

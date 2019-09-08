@@ -9,8 +9,6 @@ namespace Penguin.Reflection.Extensions
     public static class ObjectExtensions
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
-        #region Methods
-
         /// <summary>
         /// Converts an object to a dictionary and adds a property
         /// </summary>
@@ -112,7 +110,5 @@ namespace Penguin.Reflection.Extensions
             }
             return sb.ToString();
         }
-
-        #endregion Methods
     }
 }

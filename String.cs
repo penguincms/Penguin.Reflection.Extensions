@@ -10,8 +10,6 @@ namespace Penguin.Reflection.Extensions
     public static class StringExtensions
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
-        #region Methods
-
         /// <summary>
         /// Attempts to convert a string to the specified type
         /// </summary>
@@ -30,8 +28,7 @@ namespace Penguin.Reflection.Extensions
         /// <returns></returns>
         public static object Convert(this string s, Type t, bool IgnoreCase = false)
         {
-
-            if(t == typeof(string))
+            if (t == typeof(string))
             {
                 return s;
             }
@@ -45,7 +42,8 @@ namespace Penguin.Reflection.Extensions
                 else if (s == "0")
                 {
                     return false;
-                } else
+                }
+                else
                 {
                     return bool.Parse(s);
                 }
@@ -57,7 +55,8 @@ namespace Penguin.Reflection.Extensions
                 if (t.IsValueType)
                 {
                     return t.GetDefaultValue();
-                } else
+                }
+                else
                 {
                     return null;
                 }
@@ -65,7 +64,6 @@ namespace Penguin.Reflection.Extensions
 
             if (t.IsEnum)
             {
-
                 if (char.IsDigit(s[0]))
                 {
                     return Enum.Parse(t, s);
@@ -103,14 +101,13 @@ namespace Penguin.Reflection.Extensions
                     }
                 }
 
-                foreach(MethodInfo m in t.GetMethods())
+                foreach (MethodInfo m in t.GetMethods())
                 {
-                    if(m.Name == "Parse" && m.IsStatic)
+                    if (m.Name == "Parse" && m.IsStatic)
                     {
-
                         ParameterInfo[] Params = m.GetParameters();
 
-                        if(Params.Count() == 1 && Params.Single().ParameterType == typeof(string))
+                        if (Params.Count() == 1 && Params.Single().ParameterType == typeof(string))
                         {
                             return m.Invoke(null, new object[] { s });
                         }
@@ -122,7 +119,5 @@ namespace Penguin.Reflection.Extensions
         }
 
         private static HashSet<Type> CantChange { get; set; } = new HashSet<Type>();
-
-        #endregion Methods
     }
 }
