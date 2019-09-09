@@ -140,6 +140,24 @@ namespace Penguin.Reflection.Extensions
         }
 
         /// <summary>
+        /// Checks if the type inherits from ICollection or a Generic ICollection
+        /// </summary>
+        /// <param name="t">The type to check</param>
+        /// <returns>If the type inherits from ICollection or a Generic ICollection</returns>
+        public static bool IsCollection(this Type t)
+        {
+            Type gType;
+            if ((gType = t.GetGenericArguments().FirstOrDefault()) != null)
+            {
+                return typeof(ICollection<>).MakeGenericType(gType).IsAssignableFrom(t);
+            }
+            else
+            {
+                return typeof(ICollection).IsAssignableFrom(t);
+            }
+        }
+
+        /// <summary>
         /// Gets a list of all fields on the object that are CONST
         /// </summary>
         /// <param name="type">The type to search</param>

@@ -93,6 +93,13 @@
             <param name="type">The type to search</param>
             <returns>The unit type of the collection</returns>
         </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsCollection(System.Type)">
+            <summary>
+            Checks if the type inherits from ICollection or a Generic ICollection
+            </summary>
+            <param name="t">The type to check</param>
+            <returns>If the type inherits from ICollection or a Generic ICollection</returns>
+        </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetConstants(System.Type)">
             <summary>
             Gets a list of all fields on the object that are CONST
