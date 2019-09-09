@@ -1,6 +1,7 @@
 ﻿using Penguin.Reflection.Abstractions;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -89,6 +90,7 @@ namespace Penguin.Reflection.Extensions
         /// <returns>The aforementioned list</returns>
         public static IEnumerable<Type> GetAllTypesImplementingGenericBase(Type baseType, Type typeParameter) => GetAllTypesImplementingGenericBase(baseType).Where(t => t.BaseType.GenericTypeArguments.Contains(typeParameter));
 
+        internal static ConcurrentDictionary<Type, Type> CollectionTypeCache = new ConcurrentDictionary<Type, Type>();
         /// <summary>
         /// Attempts to resolve a type representation of a collection to retrieve its core unit. Should work on things like Lists as well as Arrays
         /// </summary>
@@ -96,8 +98,10 @@ namespace Penguin.Reflection.Extensions
         /// <returns>The unit type of the collection</returns>
         public static Type GetCollectionType(this Type type)
         {
-            Type itemType = null;
-            ;
+            if(CollectionTypeCache.TryGetValue(type, out Type itemType))
+            {
+                return itemType;
+            }
 
             if (type.IsArray)
             {
@@ -105,30 +109,32 @@ namespace Penguin.Reflection.Extensions
             }
             else
             {
-                if (type.GetGenericArguments().Any())
-                {
-                    itemType = type.GetGenericArguments()[0];
-                }
-                else
-                {
-                    List<Type> containerTypesToCheck = new List<Type>();
-
+                if ((itemType = type.GetGenericArguments().FirstOrDefault()) == null)
+                {            
                     if (!type.IsInterface)
-                    {
-                        containerTypesToCheck.AddRange(type.GetAllBasesExcluding(typeof(object)));
+                    {                  
+                        foreach(Type t in type.GetAllBasesExcluding(typeof(object))){
+                            if ((itemType = type.GetGenericArguments().FirstOrDefault()) != null)
+                            {
+                                break;
+                            }
+                        }
                     }
 
-                    containerTypesToCheck.AddRange(type.GetInterfaces());
-
-                    foreach (Type toCheck in containerTypesToCheck)
+                    if (itemType is null)
                     {
-                        if (toCheck.GetGenericArguments().Any())
+                        foreach (Type toCheck in type.GetInterfaces())
                         {
-                            return toCheck.GetGenericArguments()[0];
+                            if ((itemType = toCheck.GetGenericArguments().FirstOrDefault()) != null)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
             }
+
+            CollectionTypeCache.TryAdd(type, itemType);
 
             return itemType;
         }
