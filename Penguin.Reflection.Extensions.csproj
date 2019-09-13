@@ -5,7 +5,7 @@
     <PackageLicenseFile>License.txt</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/penguincms/Penguin.Reflection.Extensions</PackageProjectUrl>
     <PackageIconUrl>http://www.penguinms.com/client/images/pg.png</PackageIconUrl>
-    <Version>2.0.14</Version>
+    <Version>2.0.16</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Description>Reflective extensions for use in MetaData driven systems. Notable abilities include string casting to type variables (very inclusive) as well as methods like IsNumericType, IsDecimalType, GetDefaultValue, GetAllBases, GetCollectionType, and more.</Description>
