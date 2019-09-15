@@ -115,6 +115,21 @@ namespace Penguin.Reflection.Extensions
         }
 
         /// <summary>
+        /// Creates a new instance of T and shallow clones the properties across from the source
+        /// </summary>
+        /// <typeparam name="T">The type to create an instance of</typeparam>
+        /// <param name="source">The property source</param>
+        /// <returns>A new instance of T with matching properties mapped</returns>
+        public static T ShallowClone<T>(this object source)
+        {
+            T dest = Activator.CreateInstance<T>();
+
+            source.Populate(dest);
+
+            return dest;
+        }
+
+        /// <summary>
         /// Shallow copy properties across objects
         /// </summary>
         /// <param name="source">The source of the property values</param>

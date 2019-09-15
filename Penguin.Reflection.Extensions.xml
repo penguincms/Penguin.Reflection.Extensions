@@ -27,6 +27,14 @@
             <param name="o">The source object</param>
             <returns>A Json safe (hopefully) representation</returns>
         </member>
+        <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.ShallowClone``1(System.Object)">
+            <summary>
+            Creates a new instance of T and shallow clones the properties across from the source
+            </summary>
+            <typeparam name="T">The type to create an instance of</typeparam>
+            <param name="source">The property source</param>
+            <returns>A new instance of T with matching properties mapped</returns>
+        </member>
         <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.Populate(System.Object,System.Object)">
             <summary>
             Shallow copy properties across objects
