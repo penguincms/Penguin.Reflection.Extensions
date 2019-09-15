@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -28,6 +30,8 @@ namespace Penguin.Reflection.Extensions
         /// <returns></returns>
         public static object Convert(this string s, Type t, bool IgnoreCase = false)
         {
+            Contract.Requires(t != null);
+
             if (t == typeof(string))
             {
                 return s;
@@ -93,7 +97,7 @@ namespace Penguin.Reflection.Extensions
                 {
                     try
                     {
-                        return System.Convert.ChangeType(s, t);
+                        return System.Convert.ChangeType(s, t, CultureInfo.CurrentCulture);
                     }
                     catch (InvalidCastException)
                     {
