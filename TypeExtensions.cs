@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
+using Penguin.Extensions.Strings;
+using System.Text;
 
 namespace Penguin.Reflection.Extensions
 {
@@ -324,6 +326,35 @@ namespace Penguin.Reflection.Extensions
 
                 default:
                     return false;
+            }
+        }
+
+        /// <summary>
+        /// Returns a string that can be used to declare a type in code (ex System.Collections.Generic.List&lt;System.String&gt;)
+        /// </summary>
+        /// <param name="type">The type to get the declaration for</param>
+        /// <returns>The type declaration</returns>
+        public static string GetDeclaration(this Type type)
+        {
+            Contract.Requires(type != null);
+
+            if (!type.GetGenericArguments().Any())
+            {
+                return type.FullName;
+            }
+            else
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.Append(type.FullName.To("`"));
+
+                sb.Append("<");
+
+                sb.Append(string.Join(",", type.GetGenericArguments().Select(t => t.GetDeclaration())));
+
+                sb.Append(">");
+
+                return sb.ToString();
             }
         }
 

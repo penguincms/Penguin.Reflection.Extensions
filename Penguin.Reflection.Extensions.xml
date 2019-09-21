@@ -68,6 +68,13 @@
             <param name="IgnoreCase">Whether or not case should be ignored (enum)</param>
             <returns></returns>
         </member>
+        <member name="M:Penguin.Reflection.Extensions.StringExtensions.ToVariableName(System.String)">
+            <summary>
+            Converts the string to a value that can safely be used as a variable name when writing code
+            </summary>
+            <param name="s">The string to sanitize</param>
+            <returns>A value that can safely be used as a variable name when writing code</returns>
+        </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetAllBasesExcluding(System.Type,System.Type)">
             <summary>
             Returns a stack of all base types excluding the end type (like object)
@@ -187,6 +194,13 @@
             </summary>
             <param name="t">The type to check</param>
             <returns>Is the type numeric?</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetDeclaration(System.Type)">
+            <summary>
+            Returns a string that can be used to declare a type in code (ex System.Collections.Generic.List&lt;System.String&gt;)
+            </summary>
+            <param name="type">The type to get the declaration for</param>
+            <returns>The type declaration</returns>
         </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsStatic(System.Type)">
             <summary>
