@@ -24,7 +24,15 @@ namespace Penguin.Reflection.Extensions
         /// <returns>A stack of types including the start type but excluding the end type</returns>
         public static IEnumerable<Type> GetAllBasesExcluding(this Type start, Type end)
         {
-            Contract.Requires(start != null);
+            if (start is null)
+            {
+                throw new ArgumentNullException(nameof(start));
+            }
+
+            if (end is null)
+            {
+                throw new ArgumentNullException(nameof(end));
+            }
 
             Type toCheck = start;
             while (toCheck.IsSubclassOf(end) && toCheck != end)
@@ -42,7 +50,15 @@ namespace Penguin.Reflection.Extensions
         /// <returns>A stack of all types between the two given types</returns>
         public static IEnumerable<Type> GetAllBasesIncluding(this Type start, Type end)
         {
-            Contract.Requires(start != null);
+            if (start is null)
+            {
+                throw new ArgumentNullException(nameof(start));
+            }
+
+            if (end is null)
+            {
+                throw new ArgumentNullException(nameof(end));
+            }
 
             Type toCheck = start;
             while (toCheck.IsSubclassOf(end))
@@ -65,7 +81,10 @@ namespace Penguin.Reflection.Extensions
         /// <returns>All CONST from the given type, casted to the specified type</returns>
         public static List<T> GetAllPublicConstantValues<T>(this Type type)
         {
-            Contract.Requires(type != null);
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             return type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
                        .Where(fi => fi.IsLiteral && !fi.IsInitOnly && fi.FieldType is T)
@@ -111,7 +130,10 @@ namespace Penguin.Reflection.Extensions
         /// <returns>The unit type of the collection</returns>
         public static Type GetCollectionType(this Type type)
         {
-            Contract.Requires(type != null);
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             if (CollectionTypeCache.TryGetValue(type, out Type itemType))
             {
@@ -162,7 +184,11 @@ namespace Penguin.Reflection.Extensions
         /// <returns>If the type inherits from ICollection or a Generic ICollection</returns>
         public static bool IsCollection(this Type t)
         {
-            Contract.Requires(t != null);
+            if (t is null)
+            {
+                throw new ArgumentNullException(nameof(t));
+            }
+
             Type gType;
             if ((gType = t.GetGenericArguments().FirstOrDefault()) != null)
             {
@@ -181,7 +207,10 @@ namespace Penguin.Reflection.Extensions
         /// <returns>The const fields</returns>
         public static IEnumerable<FieldInfo> GetConstants(this Type type)
         {
-            Contract.Requires(type != null);
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public |
                  BindingFlags.Static | BindingFlags.FlattenHierarchy);
@@ -196,7 +225,10 @@ namespace Penguin.Reflection.Extensions
         /// <returns>Its core type</returns>
         public static CoreType GetCoreType(this Type type)
         {
-            Contract.Requires(type != null);
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             if (new List<Type>() { typeof(string), typeof(Guid) }.Contains(type) || (Nullable.GetUnderlyingType(type) != null))
             {
@@ -238,7 +270,10 @@ namespace Penguin.Reflection.Extensions
         /// <returns>The default value for the type</returns>
         public static object GetDefaultValue(this Type type)
         {
-            Contract.Requires(type != null);
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             if (type.IsValueType)
             {
@@ -255,7 +290,10 @@ namespace Penguin.Reflection.Extensions
         /// <returns>The name without the generic part</returns>
         public static string GetNameWithoutGenericArity(this Type t)
         {
-            Contract.Requires(t != null);
+            if (t is null)
+            {
+                throw new ArgumentNullException(nameof(t));
+            }
 
             string name = t.Name;
             int index = name.IndexOf('`');
@@ -263,17 +301,75 @@ namespace Penguin.Reflection.Extensions
         }
 
         /// <summary>
-        /// An easier to read way to check if a type implements an interface
+        /// An easier to read way to check if a type implements an interface, includes open generics
         /// </summary>
         /// <param name="type">The type to check</param>
         /// <param name="thisInterface">The interface to check for</param>
         /// <returns>Whether or not the type implements the interface</returns>
         public static bool ImplementsInterface(this Type type, Type thisInterface)
         {
-            Contract.Requires(thisInterface != null);
-            Contract.Requires(type != null);
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
-            return thisInterface.IsAssignableFrom(type);
+            if (thisInterface is null)
+            {
+                throw new ArgumentNullException(nameof(thisInterface));
+            }
+
+            if (thisInterface.IsGenericTypeDefinition)
+            {
+               return type.GetInterfaces().Any(x =>
+                      x.IsGenericType &&
+                      x.GetGenericTypeDefinition() == thisInterface);
+            }  else
+            {
+                return thisInterface.IsAssignableFrom(type);
+            }
+              
+        }
+
+        /// <summary>
+        /// Takes in an open type definition and finds all interfaces or base classes that define that open definition and returns them
+        /// </summary>
+        /// <param name="type">The type to check for implementations</param>
+        /// <param name="toFind">The open type definition to search for</param>
+        /// <returns>Each defined close type definition for the type being checked, that is an implementation of the search type</returns>
+        public static IEnumerable<Type> GetClosedImplementationsFor(this Type type, Type toFind)
+        {
+            if (toFind is null)
+            {
+                throw new ArgumentNullException(nameof(toFind));
+            }
+
+            if (!toFind.IsGenericTypeDefinition)
+            {
+                throw new ArgumentException("This method can only be used on open type definitions");
+            }
+
+            if(toFind.IsInterface)
+            {
+                foreach(Type interfaceType in type.GetInterfaces())
+                {
+                    if(interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == toFind)
+                    {
+                        yield return interfaceType; 
+                    }
+                }
+            } else
+            {
+                Type toCheck = type;
+
+                do
+                {
+                    if (toCheck.IsGenericType && toCheck.GetGenericTypeDefinition() == toFind)
+                    {
+                        yield return toCheck;
+                    }
+                    toCheck = toCheck.BaseType;
+                } while (toCheck != null);
+            }
         }
 
         /// <summary>

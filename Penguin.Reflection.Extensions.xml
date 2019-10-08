@@ -167,11 +167,19 @@
         </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.ImplementsInterface(System.Type,System.Type)">
             <summary>
-            An easier to read way to check if a type implements an interface
+            An easier to read way to check if a type implements an interface, includes open generics
             </summary>
             <param name="type">The type to check</param>
             <param name="thisInterface">The interface to check for</param>
             <returns>Whether or not the type implements the interface</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetClosedImplementationsFor(System.Type,System.Type)">
+            <summary>
+            Takes in an open type definition and finds all interfaces or base classes that define that open definition and returns them
+            </summary>
+            <param name="type">The type to check for implementations</param>
+            <param name="toFind">The open type definition to search for</param>
+            <returns>Each defined close type definition for the type being checked, that is an implementation of the search type</returns>
         </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.ImplementsInterface``1(System.Type)">
             <summary>
