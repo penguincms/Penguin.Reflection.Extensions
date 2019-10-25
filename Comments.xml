@@ -1,0 +1,237 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Penguin.Reflection.Extensions.Local</name>
+    </assembly>
+    <members>
+        <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.AddProperty(System.Object,System.String,System.Object)">
+            <summary>
+            Converts an object to a dictionary and adds a property
+            </summary>
+            <param name="o">The source object</param>
+            <param name="name">The property name</param>
+            <param name="value">The property value</param>
+            <returns>A dictionary representation of the object</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.ToDictionary(System.Object)">
+            <summary>
+            Converts an object to a dictionary of properties and values
+            </summary>
+            <param name="o">The object source</param>
+            <returns>A dictionary of property names and values</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.ToJSONValue(System.Object)">
+            <summary>
+            Attempts to string convert an object into a value that can be consumed by a json serializer
+            </summary>
+            <param name="o">The source object</param>
+            <returns>A Json safe (hopefully) representation</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.ShallowClone``1(System.Object)">
+            <summary>
+            Creates a new instance of T and shallow clones the properties across from the source
+            </summary>
+            <typeparam name="T">The type to create an instance of</typeparam>
+            <param name="source">The property source</param>
+            <returns>A new instance of T with matching properties mapped</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.ShallowClone``1(``0)">
+            <summary>
+            Creates a new instance of T and shallow clones the properties across from the source
+            </summary>
+            <typeparam name="T">The type to create an instance of</typeparam>
+            <param name="source">The property source</param>
+            <returns>A new instance of T with matching properties mapped</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.Populate(System.Object,System.Object)">
+            <summary>
+            Shallow copy properties across objects
+            </summary>
+            <param name="source">The source of the property values</param>
+            <param name="dest">The destination of the property values</param>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.StringExtensions.Convert``1(System.String,System.Boolean)">
+            <summary>
+            Attempts to convert a string to the specified type
+            </summary>
+            <typeparam name="T">The type to cast the return value as</typeparam>
+            <param name="s">The string value</param>
+            <param name="IgnoreCase">Whether or not case should be ignored (enum)</param>
+            <returns>A casted representation of the string value</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.StringExtensions.Convert(System.String,System.Type,System.Boolean)">
+            <summary>
+            Converts a string to the requested type. Handles nullables.
+            </summary>
+            <param name="s">The string value</param>
+            <param name="t">The type to cast the value as</param>
+            <param name="IgnoreCase">Whether or not case should be ignored (enum)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.StringExtensions.ToVariableName(System.String)">
+            <summary>
+            Converts the string to a value that can safely be used as a variable name when writing code
+            </summary>
+            <param name="s">The string to sanitize</param>
+            <returns>A value that can safely be used as a variable name when writing code</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetAllBasesExcluding(System.Type,System.Type)">
+            <summary>
+            Returns a stack of all base types excluding the end type (like object)
+            </summary>
+            <param name="start">The type to start recursion at</param>
+            <param name="end">The exclusive end type for the recursion</param>
+            <returns>A stack of types including the start type but excluding the end type</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetAllBasesIncluding(System.Type,System.Type)">
+            <summary>
+            Returns a stack of all types between the two given types, including the end (if found)
+            </summary>
+            <param name="start">The type to start recursion at</param>
+            <param name="end">The type to end recursion at</param>
+            <returns>A stack of all types between the two given types</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetAllPublicConstantValues``1(System.Type)">
+            <summary>
+            Gets all CONST from the given type, casted to the specified type
+            </summary>
+            <typeparam name="T">The type to return</typeparam>
+            <param name="type">The type to search</param>
+            <returns>All CONST from the given type, casted to the specified type</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetAllTypesImplementingGenericBase(System.Type)">
+            <summary>
+            Searches the current assembly for all types implementing the generic base class, that can be instantiated
+            Ex FoundType : baseType&lt;&gt;
+            </summary>
+            <param name="baseType">The base type to search for</param>
+            <returns>All types implementing a generic base class</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetAllTypesImplementingGenericBase(System.Type,System.Type)">
+            <summary>
+            Searches the current assembly for all types implementing the generic base class where the base class parameter equals the specified type
+            Ex FoundType : baseType&lt;thing&gt;
+            </summary>
+            <param name="baseType">The base type to search for</param>
+            <param name="typeParameter">The type the base class must implement</param>
+            <returns>The aforementioned list</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetCollectionType(System.Type)">
+            <summary>
+            Attempts to resolve a type representation of a collection to retrieve its core unit. Should work on things like Lists as well as Arrays
+            </summary>
+            <param name="type">The type to search</param>
+            <returns>The unit type of the collection</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsCollection(System.Type)">
+            <summary>
+            Checks if the type inherits from ICollection or a Generic ICollection
+            </summary>
+            <param name="t">The type to check</param>
+            <returns>If the type inherits from ICollection or a Generic ICollection</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetConstants(System.Type)">
+            <summary>
+            Gets a list of all fields on the object that are CONST
+            </summary>
+            <param name="type">The type to search</param>
+            <returns>The const fields</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetCoreType(System.Type)">
+            <summary>
+            Attempts to get the type CoreType (simple type representation)
+            </summary>
+            <param name="type">The type to check</param>
+            <returns>Its core type</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetDefaultValue``1">
+            <summary>
+            Resolves the default value for a generic type. Dont know why this exists
+            </summary>
+            <typeparam name="T">The generic type to check</typeparam>
+            <returns>The default value for the type</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetDefaultValue(System.Type)">
+            <summary>
+            Attempts to get the default value for a type by creating an instance
+            </summary>
+            <param name="type">The type to get the value for</param>
+            <returns>The default value for the type</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetNameWithoutGenericArity(System.Type)">
+            <summary>
+            Literally just removes everything after '`'
+            </summary>
+            <param name="t">The type name to get</param>
+            <returns>The name without the generic part</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.ImplementsInterface(System.Type,System.Type)">
+            <summary>
+            An easier to read way to check if a type implements an interface, includes open generics
+            </summary>
+            <param name="type">The type to check</param>
+            <param name="thisInterface">The interface to check for</param>
+            <returns>Whether or not the type implements the interface</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetClosedImplementationsFor(System.Type,System.Type)">
+            <summary>
+            Takes in an open type definition and finds all interfaces or base classes that define that open definition and returns them
+            </summary>
+            <param name="type">The type to check for implementations</param>
+            <param name="toFind">The open type definition to search for</param>
+            <returns>Each defined close type definition for the type being checked, that is an implementation of the search type</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.ImplementsInterface``1(System.Type)">
+            <summary>
+            An easier to read way to check if a type implements an interface
+            </summary>
+            <typeparam name="T">The type to check</typeparam>
+            <param name="type">The type to check</param>
+            <returns>Whether or not the type implements the interface</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsDecimalType(System.Type)">
+            <summary>
+            Checks if the type supports decimal notation
+            </summary>
+            <param name="t">the type to check</param>
+            <returns>Does the type support decimal notation?</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsNumericType(System.Type)">
+            <summary>
+            Checks if the type matches any of the Numeric types
+            </summary>
+            <param name="t">The type to check</param>
+            <returns>Is the type numeric?</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetDeclaration(System.Type)">
+            <summary>
+            Returns a string that can be used to declare a type in code (ex System.Collections.Generic.List&lt;System.String&gt;)
+            </summary>
+            <param name="type">The type to get the declaration for</param>
+            <returns>The type declaration</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsStatic(System.Type)">
+            <summary>
+            Is the type static?
+            </summary>
+            <param name="type">Is the type static?</param>
+            <returns></returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsSubclassOf``1(System.Type)">
+            <summary>
+            Checks to see if the type is a subclass of the given type
+            </summary>
+            <typeparam name="T">The possible base type</typeparam>
+            <param name="type">the type to check</param>
+            <returns>if the type is a subclass of the given type</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsSubclassOf(System.Type,System.Type)">
+            <summary>
+            Checks to see if the type is a subclass of the given type
+            </summary>
+            <param name="type">The possible base type</param>
+            <param name="baseType"></param>
+            <returns>if the type is a subclass of the given type</returns>
+        </member>
+    </members>
+</doc>
