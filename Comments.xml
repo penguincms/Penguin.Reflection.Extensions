@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Penguin.Reflection.Extensions.Local</name>
+        <name>Penguin.Reflection.Extensions</name>
     </assembly>
     <members>
         <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.AddProperty(System.Object,System.String,System.Object)">
