@@ -10,8 +10,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Penguin.Extensions.String" Version="3.0.2-63707648343" />
-    <PackageReference Include="Penguin.Reflection.Abstractions" Version="3.0.0-63707653241" />
+    <PackageReference Include="Penguin.Reflection.Abstractions" Version="3.0.0-T9LXGUJ" />
+    <PackageReference Include="Penguin.Extensions.String" Version="3.0.2-T9LXGUJ" />
   </ItemGroup>
   <Import Project="Penguin.Projects.Shared\Penguin.Projects.Shared.csproj" />
 </Project>
