@@ -107,6 +107,13 @@
             <param name="baseType">The base type to search for</param>
             <returns>All types implementing a generic base class</returns>
         </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsAnonymousType(System.Type)">
+            <summary>
+            Checks if a given type is anonymous
+            </summary>
+            <param name="type">The type to check</param>
+            <returns>True if the given type is anonymous</returns>
+        </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetAllTypesImplementingGenericBase(System.Type,System.Type)">
             <summary>
             Searches the current assembly for all types implementing the generic base class where the base class parameter equals the specified type

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using Penguin.Extensions.Strings;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace Penguin.Reflection.Extensions
 {
@@ -111,6 +112,24 @@ namespace Penguin.Reflection.Extensions
             return allTypesOfIRepository.ToList();
         }
 
+        /// <summary>
+        /// Checks if a given type is anonymous
+        /// </summary>
+        /// <param name="type">The type to check</param>
+        /// <returns>True if the given type is anonymous</returns>
+        public static bool IsAnonymousType(this Type type)
+        {
+            if(type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            Boolean hasCompilerGeneratedAttribute = type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any();
+            Boolean nameContainsAnonymousType = type.FullName.Contains("AnonymousType");
+            Boolean isAnonymousType = hasCompilerGeneratedAttribute && nameContainsAnonymousType;
+
+            return isAnonymousType;
+        }
         /// <summary>
         /// Searches the current assembly for all types implementing the generic base class where the base class parameter equals the specified type
         /// Ex FoundType : baseType&lt;thing&gt;
