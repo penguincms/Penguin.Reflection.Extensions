@@ -49,14 +49,13 @@ namespace Penguin.Reflection.Extensions
             return result;
         }
 
-
         /// <summary>
         /// Attempts to string convert an object into a value that can be consumed by a json serializer
         /// </summary>
         /// <param name="o">The source object</param>
         /// <returns>A Json safe (hopefully) representation</returns>
-       public static string ToJSONValue(this object o)
-       {
+        public static string ToJSONValue(this object o)
+        {
             Contract.Requires(o != null);
 
             string s = o.ToString();

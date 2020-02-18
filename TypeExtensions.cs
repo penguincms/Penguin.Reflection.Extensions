@@ -1,4 +1,5 @@
-﻿using Penguin.Reflection.Abstractions;
+﻿using Penguin.Extensions.Strings;
+using Penguin.Reflection.Abstractions;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -6,9 +7,8 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
-using Penguin.Extensions.Strings;
-using System.Text;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Penguin.Reflection.Extensions
 {
@@ -119,7 +119,7 @@ namespace Penguin.Reflection.Extensions
         /// <returns>True if the given type is anonymous</returns>
         public static bool IsAnonymousType(this Type type)
         {
-            if(type is null)
+            if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
@@ -130,6 +130,7 @@ namespace Penguin.Reflection.Extensions
 
             return isAnonymousType;
         }
+
         /// <summary>
         /// Searches the current assembly for all types implementing the generic base class where the base class parameter equals the specified type
         /// Ex FoundType : baseType&lt;thing&gt;
@@ -140,7 +141,6 @@ namespace Penguin.Reflection.Extensions
         public static IEnumerable<Type> GetAllTypesImplementingGenericBase(Type baseType, Type typeParameter) => GetAllTypesImplementingGenericBase(baseType).Where(t => t.BaseType.GenericTypeArguments.Contains(typeParameter));
 
         internal static ConcurrentDictionary<Type, Type> CollectionTypeCache = new ConcurrentDictionary<Type, Type>();
-
 
         /// <summary>
         /// Attempts to resolve a type representation of a collection to retrieve its core unit. Should work on things like Lists as well as Arrays
@@ -339,14 +339,14 @@ namespace Penguin.Reflection.Extensions
 
             if (thisInterface.IsGenericTypeDefinition)
             {
-               return type.GetInterfaces().Any(x =>
-                      x.IsGenericType &&
-                      x.GetGenericTypeDefinition() == thisInterface);
-            }  else
+                return type.GetInterfaces().Any(x =>
+                       x.IsGenericType &&
+                       x.GetGenericTypeDefinition() == thisInterface);
+            }
+            else
             {
                 return thisInterface.IsAssignableFrom(type);
             }
-              
         }
 
         /// <summary>
@@ -367,16 +367,17 @@ namespace Penguin.Reflection.Extensions
                 throw new ArgumentException("This method can only be used on open type definitions");
             }
 
-            if(toFind.IsInterface)
+            if (toFind.IsInterface)
             {
-                foreach(Type interfaceType in type.GetInterfaces())
+                foreach (Type interfaceType in type.GetInterfaces())
                 {
-                    if(interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == toFind)
+                    if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == toFind)
                     {
-                        yield return interfaceType; 
+                        yield return interfaceType;
                     }
                 }
-            } else
+            }
+            else
             {
                 Type toCheck = type;
 
