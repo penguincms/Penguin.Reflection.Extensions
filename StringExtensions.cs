@@ -19,7 +19,10 @@ namespace Penguin.Reflection.Extensions
         /// <param name="s">The string value</param>
         /// <param name="IgnoreCase">Whether or not case should be ignored (enum)</param>
         /// <returns>A casted representation of the string value</returns>
-        public static T Convert<T>(this string s, bool IgnoreCase = false) => (T)s.Convert(typeof(T), IgnoreCase);
+        public static T Convert<T>(this string s, bool IgnoreCase = false)
+        {
+            return (T)s.Convert(typeof(T), IgnoreCase);
+        }
 
         /// <summary>
         /// Converts a string to the requested type. Handles nullables.
@@ -111,7 +114,7 @@ namespace Penguin.Reflection.Extensions
                     {
                         ParameterInfo[] Params = m.GetParameters();
 
-                        if (Params.Count() == 1 && Params.Single().ParameterType == typeof(string))
+                        if (Params.Length == 1 && Params.Single().ParameterType == typeof(string))
                         {
                             return m.Invoke(null, new object[] { s });
                         }
@@ -136,8 +139,8 @@ namespace Penguin.Reflection.Extensions
                 s = "_" + s;
             }
 
-            return String.Join("", s.AsEnumerable()
-                                    .Select(chr => Char.IsLetter(chr) || Char.IsDigit(chr)
+            return string.Join("", s.AsEnumerable()
+                                    .Select(chr => char.IsLetter(chr) || char.IsDigit(chr)
                                                    ? chr.ToString(CultureInfo.CurrentCulture)      // valid symbol
                                                    : "_" + (short)chr + "_") // numeric code for invalid symbol
                               );

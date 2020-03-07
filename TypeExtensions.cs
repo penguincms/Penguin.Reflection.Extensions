@@ -1,4 +1,5 @@
-﻿using Penguin.Reflection.Abstractions;
+﻿using Penguin.Extensions.Strings;
+using Penguin.Reflection.Abstractions;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -6,9 +7,8 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
-using Penguin.Extensions.Strings;
-using System.Text;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Penguin.Reflection.Extensions
 {
@@ -119,17 +119,18 @@ namespace Penguin.Reflection.Extensions
         /// <returns>True if the given type is anonymous</returns>
         public static bool IsAnonymousType(this Type type)
         {
-            if(type is null)
+            if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            Boolean hasCompilerGeneratedAttribute = type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any();
-            Boolean nameContainsAnonymousType = type.FullName.Contains("AnonymousType");
-            Boolean isAnonymousType = hasCompilerGeneratedAttribute && nameContainsAnonymousType;
+            bool hasCompilerGeneratedAttribute = type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any();
+            bool nameContainsAnonymousType = type.FullName.Contains("AnonymousType");
+            bool isAnonymousType = hasCompilerGeneratedAttribute && nameContainsAnonymousType;
 
             return isAnonymousType;
         }
+
         /// <summary>
         /// Searches the current assembly for all types implementing the generic base class where the base class parameter equals the specified type
         /// Ex FoundType : baseType&lt;thing&gt;
@@ -137,10 +138,12 @@ namespace Penguin.Reflection.Extensions
         /// <param name="baseType">The base type to search for</param>
         /// <param name="typeParameter">The type the base class must implement</param>
         /// <returns>The aforementioned list</returns>
-        public static IEnumerable<Type> GetAllTypesImplementingGenericBase(Type baseType, Type typeParameter) => GetAllTypesImplementingGenericBase(baseType).Where(t => t.BaseType.GenericTypeArguments.Contains(typeParameter));
+        public static IEnumerable<Type> GetAllTypesImplementingGenericBase(Type baseType, Type typeParameter)
+        {
+            return GetAllTypesImplementingGenericBase(baseType).Where(t => t.BaseType.GenericTypeArguments.Contains(typeParameter));
+        }
 
         internal static ConcurrentDictionary<Type, Type> CollectionTypeCache = new ConcurrentDictionary<Type, Type>();
-
 
         /// <summary>
         /// Attempts to resolve a type representation of a collection to retrieve its core unit. Should work on things like Lists as well as Arrays
@@ -253,7 +256,7 @@ namespace Penguin.Reflection.Extensions
             {
                 return CoreType.Value;
             }
-            else if (typeof(IEnumerable).IsAssignableFrom(type) && (type.IsArray || type.GetGenericArguments().Count() == 1))
+            else if (typeof(IEnumerable).IsAssignableFrom(type) && (type.IsArray || type.GetGenericArguments().Length == 1))
             {
                 return CoreType.Collection;
             }
@@ -280,7 +283,10 @@ namespace Penguin.Reflection.Extensions
         /// </summary>
         /// <typeparam name="T">The generic type to check</typeparam>
         /// <returns>The default value for the type</returns>
-        public static T GetDefaultValue<T>() => default;
+        public static T GetDefaultValue<T>()
+        {
+            return default;
+        }
 
         /// <summary>
         /// Attempts to get the default value for a type by creating an instance
@@ -339,14 +345,14 @@ namespace Penguin.Reflection.Extensions
 
             if (thisInterface.IsGenericTypeDefinition)
             {
-               return type.GetInterfaces().Any(x =>
-                      x.IsGenericType &&
-                      x.GetGenericTypeDefinition() == thisInterface);
-            }  else
+                return type.GetInterfaces().Any(x =>
+                       x.IsGenericType &&
+                       x.GetGenericTypeDefinition() == thisInterface);
+            }
+            else
             {
                 return thisInterface.IsAssignableFrom(type);
             }
-              
         }
 
         /// <summary>
@@ -367,16 +373,17 @@ namespace Penguin.Reflection.Extensions
                 throw new ArgumentException("This method can only be used on open type definitions");
             }
 
-            if(toFind.IsInterface)
+            if (toFind.IsInterface)
             {
-                foreach(Type interfaceType in type.GetInterfaces())
+                foreach (Type interfaceType in type.GetInterfaces())
                 {
-                    if(interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == toFind)
+                    if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == toFind)
                     {
-                        yield return interfaceType; 
+                        yield return interfaceType;
                     }
                 }
-            } else
+            }
+            else
             {
                 Type toCheck = type;
 
@@ -397,7 +404,10 @@ namespace Penguin.Reflection.Extensions
         /// <typeparam name="T">The type to check</typeparam>
         /// <param name="type">The type to check</param>
         /// <returns>Whether or not the type implements the interface</returns>
-        public static bool ImplementsInterface<T>(this Type type) => type.ImplementsInterface(typeof(T));
+        public static bool ImplementsInterface<T>(this Type type)
+        {
+            return type.ImplementsInterface(typeof(T));
+        }
 
         /// <summary>
         /// Checks if the type supports decimal notation

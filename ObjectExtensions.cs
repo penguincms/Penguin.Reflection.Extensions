@@ -49,13 +49,24 @@ namespace Penguin.Reflection.Extensions
             return result;
         }
 
-        public static void Invoke(string MethodName, params object[] Parameters) => Invoke<object>(MethodName, BindingFlags.Public, BindingFlags.Instance, Parameters);
-        public static void Invoke(this object o, string MethodName, BindingFlags flags, params object[] Parameters) => Invoke<object>(o, MethodName, flags, Parameters);
-        public static T Invoke<T>(string MethodName, params object[] Parameters) => Invoke<T>(MethodName, BindingFlags.Public, BindingFlags.Instance, Parameters);
+        public static void Invoke(string MethodName, params object[] Parameters)
+        {
+            Invoke<object>(MethodName, BindingFlags.Public, BindingFlags.Instance, Parameters);
+        }
+
+        public static void Invoke(this object o, string MethodName, BindingFlags flags, params object[] Parameters)
+        {
+            Invoke<object>(o, MethodName, flags, Parameters);
+        }
+
+        public static T Invoke<T>(string MethodName, params object[] Parameters)
+        {
+            return Invoke<T>(MethodName, BindingFlags.Public, BindingFlags.Instance, Parameters);
+        }
+
         public static T Invoke<T>(this object o, string MethodName, BindingFlags flags, params object[] Parameters)
         {
-
-            if(o is null)
+            if (o is null)
             {
                 throw new ArgumentNullException(nameof(o));
             }
@@ -64,43 +75,40 @@ namespace Penguin.Reflection.Extensions
 
             List<MethodInfo> methods = t.GetMethods(flags).ToList();
 
-            if(!methods.Any())
+            if (!methods.Any())
             {
                 throw new NotImplementedException($"No methods found on object with type {t}");
             }
 
             methods = methods.Where(m => m.Name == MethodName).ToList();
 
-            if(!methods.Any())
+            if (!methods.Any())
             {
                 throw new NotImplementedException($"Method with name {MethodName} not found on object with type {t}");
             }
 
             MethodInfo toExecute = null;
 
-            foreach(MethodInfo m in methods)
+            foreach (MethodInfo m in methods)
             {
                 int i = 0;
-                bool Match = true;
 
                 List<ParameterInfo> parameters = m.GetParameters().ToList();
 
-                if(Parameters.Length > parameters.Count)
+                if (Parameters.Length > parameters.Count)
                 {
                     continue;
                 }
 
                 foreach (ParameterInfo pi in parameters)
                 {
-                    if(Parameters.Length <= i)
+                    if (Parameters.Length <= i)
                     {
                         if (!pi.IsOptional)
                         {
-                            Match = false;
                             break;
                         }
                     }
-
 
                     object input = Parameters[i];
 
@@ -108,7 +116,6 @@ namespace Penguin.Reflection.Extensions
 
                     if (input != null && !expectedType.IsAssignableFrom(input.GetType()))
                     {
-                        Match = false;
                         break;
                     }
 
@@ -116,14 +123,14 @@ namespace Penguin.Reflection.Extensions
                 }
             }
 
-            if(toExecute is null)
+            if (toExecute is null)
             {
                 throw new NotImplementedException($"Could not find method matching signature {MethodName}({string.Join(", ", Parameters.Select(p => p is null ? "object?" : p.GetType().GetDeclaration()))})");
             }
 
             object result = toExecute.Invoke(o, Parameters);
 
-            if(!(result is T))
+            if (!(result is T))
             {
                 throw new InvalidCastException($"Method {MethodName} returned type {(result is null ? "null" : result.GetType().ToString())} but a return type of {typeof(T)} was expected.");
             }
@@ -131,14 +138,13 @@ namespace Penguin.Reflection.Extensions
             return (T)result;
         }
 
-
         /// <summary>
         /// Attempts to string convert an object into a value that can be consumed by a json serializer
         /// </summary>
         /// <param name="o">The source object</param>
         /// <returns>A Json safe (hopefully) representation</returns>
         public static string ToJSONValue(this object o)
-       {
+        {
             Contract.Requires(o != null);
 
             string s = o.ToString();
