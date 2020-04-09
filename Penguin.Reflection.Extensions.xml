@@ -75,6 +75,11 @@
             <param name="s">The string to sanitize</param>
             <returns>A value that can safely be used as a variable name when writing code</returns>
         </member>
+        <member name="T:Penguin.Reflection.Extensions.TypeExtensions">
+            <summary>
+            https://www.codeproject.com/Articles/103542/Removing-Event-Handlers-using-Reflection
+            </summary>
+        </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetAllBasesExcluding(System.Type,System.Type)">
             <summary>
             Returns a stack of all base types excluding the end type (like object)

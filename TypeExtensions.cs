@@ -14,7 +14,7 @@ namespace Penguin.Reflection.Extensions
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-    public static class TypeExtensions
+    public static partial class TypeExtensions
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
@@ -363,6 +363,11 @@ namespace Penguin.Reflection.Extensions
         /// <returns>Each defined close type definition for the type being checked, that is an implementation of the search type</returns>
         public static IEnumerable<Type> GetClosedImplementationsFor(this Type type, Type toFind)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             if (toFind is null)
             {
                 throw new ArgumentNullException(nameof(toFind));

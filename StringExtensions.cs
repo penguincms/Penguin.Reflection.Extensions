@@ -147,5 +147,10 @@ namespace Penguin.Reflection.Extensions
         }
 
         private static HashSet<Type> CantChange { get; set; } = new HashSet<Type>();
+
+        static StringExtensions()
+        {
+            CantChange.Add(typeof(DateTimeOffset));
+        }
     }
 }
