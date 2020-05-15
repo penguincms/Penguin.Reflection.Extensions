@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Penguin.Extensions.Strings.Compatibility;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
@@ -24,6 +25,51 @@ namespace Penguin.Reflection.Extensions
             return (T)s.Convert(typeof(T), IgnoreCase);
         }
 
+
+        private static bool IsValidEnumValue(string toCheck)
+        {
+            if (string.IsNullOrWhiteSpace(toCheck))
+            {
+                return false;
+            }
+
+            if(int.TryParse(toCheck, out _) || char.IsLetter(toCheck[0]))
+            {
+                return true;
+            }
+
+            return false;
+        }
+        private static IEnumerable<string> SplitEnumString(string toSplit)
+        {
+            string thisVal = string.Empty;
+            for (int i = 0; i < toSplit.Count(); i++)
+            {
+                char c = toSplit[i];
+
+                if (char.IsLetter(c) || (char.IsDigit(c) && thisVal.Length > 0))
+                {
+                    thisVal += c;
+                }
+                else
+                {
+                    if (IsValidEnumValue(thisVal))
+                    {
+                        yield return thisVal;
+                    }
+
+                    thisVal = string.Empty;
+                }
+            }
+
+            if (IsValidEnumValue(thisVal))
+            {
+                yield return thisVal;
+            }
+
+        }
+
+
         /// <summary>
         /// Converts a string to the requested type. Handles nullables.
         /// </summary>
@@ -31,6 +77,7 @@ namespace Penguin.Reflection.Extensions
         /// <param name="t">The type to cast the value as</param>
         /// <param name="IgnoreCase">Whether or not case should be ignored (enum)</param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>")]
         public static object Convert(this string s, Type t, bool IgnoreCase = false)
         {
             Contract.Requires(t != null);
@@ -71,17 +118,47 @@ namespace Penguin.Reflection.Extensions
 
             if (t.IsEnum)
             {
+                StringComparison comparison = IgnoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
                 if (char.IsDigit(s[0]))
                 {
                     return Enum.Parse(t, s);
                 }
-                else if (IgnoreCase)
-                {
-                    return Enum.GetValues(t).Cast<object>().First(e => string.Equals(s, e.ToString(), StringComparison.OrdinalIgnoreCase));
-                }
-                else
-                {
-                    return Enum.GetValues(t).Cast<object>().First(e => string.Equals(s, e.ToString(), StringComparison.Ordinal));
+                else {
+
+                    object EnumValue = Enum.GetValues(t).Cast<object>().FirstOrDefault(e => string.Equals(s, e.ToString(), comparison));
+
+                    if (EnumValue != null)
+                    {
+                        return EnumValue;
+                    }
+                    else
+                    {
+
+                        if (t.GetCustomAttribute<FlagsAttribute>() is null)
+                        {
+                            throw new Exception($"Enum value {s} not found on type {t}");
+                        }
+                        else
+                        {
+                            long value = 0;
+                            Dictionary<string, long> EnumValues = new Dictionary<string, long>();
+
+                            foreach(object val in Enum.GetValues(t))
+                            {
+                                object underlyingType = System.Convert.ChangeType(val, Enum.GetUnderlyingType(t));
+
+                                EnumValues.Add(val.ToString(), System.Convert.ToInt64(underlyingType));
+                            }
+
+                            foreach(string toAdd in SplitEnumString(s))
+                            {
+                                value |= EnumValues[toAdd];
+                            }
+
+                            return Enum.ToObject(t, value);
+                        }
+                    }
                 }
             }
 

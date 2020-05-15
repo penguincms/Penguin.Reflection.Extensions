@@ -10,24 +10,9 @@ namespace Penguin.Reflection.Extensions
     /// </summary>
     public static partial class TypeExtensions
     {
-
         private static readonly Dictionary<Type, List<FieldInfo>> dicEventFieldInfos = new Dictionary<Type, List<FieldInfo>>();
 
         internal static BindingFlags AllBindings => BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
-
-        //--------------------------------------------------------------------------------
-        internal static List<FieldInfo> GetTypeEventFields(this Type t)
-        {
-            if (dicEventFieldInfos.ContainsKey(t))
-            {
-                return dicEventFieldInfos[t];
-            }
-
-            List<FieldInfo> lst = new List<FieldInfo>();
-            BuildEventFields(t, lst);
-            dicEventFieldInfos.Add(t, lst);
-            return lst;
-        }
 
         //--------------------------------------------------------------------------------
         internal static void BuildEventFields(this Type t, List<FieldInfo> lst)
@@ -73,9 +58,18 @@ namespace Penguin.Reflection.Extensions
             return (EventHandlerList)mi.Invoke(obj, Array.Empty<object>());
         }
 
-   
+        //--------------------------------------------------------------------------------
+        internal static List<FieldInfo> GetTypeEventFields(this Type t)
+        {
+            if (dicEventFieldInfos.ContainsKey(t))
+            {
+                return dicEventFieldInfos[t];
+            }
+
+            List<FieldInfo> lst = new List<FieldInfo>();
+            BuildEventFields(t, lst);
+            dicEventFieldInfos.Add(t, lst);
+            return lst;
+        }
     }
 }
-
-
-
