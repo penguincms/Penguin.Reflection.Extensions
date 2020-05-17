@@ -49,11 +49,6 @@ namespace Penguin.Reflection.Extensions
             return result;
         }
 
-        public static void Invoke(string MethodName, params object[] Parameters)
-        {
-            Invoke<object>(MethodName, BindingFlags.Public, BindingFlags.Instance, Parameters);
-        }
-
         public static void Invoke(this object o, string MethodName, BindingFlags flags, params object[] Parameters)
         {
             Invoke<object>(o, MethodName, flags, Parameters);
