@@ -25,7 +25,6 @@ namespace Penguin.Reflection.Extensions
             return (T)s.Convert(typeof(T), IgnoreCase);
         }
 
-
         private static bool IsValidEnumValue(string toCheck)
         {
             if (string.IsNullOrWhiteSpace(toCheck))
@@ -33,13 +32,14 @@ namespace Penguin.Reflection.Extensions
                 return false;
             }
 
-            if(int.TryParse(toCheck, out _) || char.IsLetter(toCheck[0]))
+            if (int.TryParse(toCheck, out _) || char.IsLetter(toCheck[0]))
             {
                 return true;
             }
 
             return false;
         }
+
         private static IEnumerable<string> SplitEnumString(string toSplit)
         {
             string thisVal = string.Empty;
@@ -66,9 +66,7 @@ namespace Penguin.Reflection.Extensions
             {
                 yield return thisVal;
             }
-
         }
-
 
         /// <summary>
         /// Converts a string to the requested type. Handles nullables.
@@ -80,7 +78,10 @@ namespace Penguin.Reflection.Extensions
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>")]
         public static object Convert(this string s, Type t, bool IgnoreCase = false)
         {
-            Contract.Requires(t != null);
+            if (t is null)
+            {
+                throw new ArgumentNullException(nameof(t));
+            }
 
             if (t == typeof(string))
             {
@@ -116,6 +117,11 @@ namespace Penguin.Reflection.Extensions
                 }
             }
 
+            if (t is null)
+            {
+                throw new ArgumentNullException(nameof(t));
+            }
+
             if (t.IsEnum)
             {
                 StringComparison comparison = IgnoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
@@ -124,8 +130,8 @@ namespace Penguin.Reflection.Extensions
                 {
                     return Enum.Parse(t, s);
                 }
-                else {
-
+                else
+                {
                     object EnumValue = Enum.GetValues(t).Cast<object>().FirstOrDefault(e => string.Equals(s, e.ToString(), comparison));
 
                     if (EnumValue != null)
@@ -134,7 +140,6 @@ namespace Penguin.Reflection.Extensions
                     }
                     else
                     {
-
                         if (t.GetCustomAttribute<FlagsAttribute>() is null)
                         {
                             throw new Exception($"Enum value {s} not found on type {t}");
@@ -144,14 +149,14 @@ namespace Penguin.Reflection.Extensions
                             long value = 0;
                             Dictionary<string, long> EnumValues = new Dictionary<string, long>();
 
-                            foreach(object val in Enum.GetValues(t))
+                            foreach (object val in Enum.GetValues(t))
                             {
                                 object underlyingType = System.Convert.ChangeType(val, Enum.GetUnderlyingType(t));
 
                                 EnumValues.Add(val.ToString(), System.Convert.ToInt64(underlyingType));
                             }
 
-                            foreach(string toAdd in SplitEnumString(s))
+                            foreach (string toAdd in SplitEnumString(s))
                             {
                                 value |= EnumValues[toAdd];
                             }
@@ -209,7 +214,10 @@ namespace Penguin.Reflection.Extensions
         /// <returns>A value that can safely be used as a variable name when writing code</returns>
         public static string ToVariableName(this string s)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(s));
+            if (s is null)
+            {
+                throw new ArgumentNullException(nameof(s));
+            }
 
             if (char.IsDigit(s[0]))
             {

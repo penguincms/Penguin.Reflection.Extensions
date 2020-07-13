@@ -466,7 +466,10 @@ namespace Penguin.Reflection.Extensions
         /// <returns>The type declaration</returns>
         public static string GetDeclaration(this Type type)
         {
-            Contract.Requires(type != null);
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             if (!type.GetGenericArguments().Any())
             {
@@ -495,7 +498,11 @@ namespace Penguin.Reflection.Extensions
         /// <returns></returns>
         public static bool IsStatic(this Type type)
         {
-            Contract.Requires(type != null);
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             return type.IsAbstract && type.IsSealed;
         }
 
@@ -507,7 +514,11 @@ namespace Penguin.Reflection.Extensions
         /// <returns>if the type is a subclass of the given type</returns>
         public static bool IsSubclassOf<T>(this Type type)
         {
-            Contract.Requires(type != null);
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             return type.IsSubclassOf(typeof(T));
         }
 

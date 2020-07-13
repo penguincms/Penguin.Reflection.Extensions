@@ -23,8 +23,6 @@ namespace Penguin.Reflection.Extensions
         /// <returns>A dictionary representation of the object</returns>
         public static IDictionary<string, object> AddProperty(this object o, string name, object value)
         {
-            Contract.Requires(o != null);
-
             IDictionary<string, object> dictionary = o.ToDictionary();
             dictionary.Add(name, value);
             return dictionary;
@@ -37,8 +35,6 @@ namespace Penguin.Reflection.Extensions
         /// <returns>A dictionary of property names and values</returns>
         public static IDictionary<string, object> ToDictionary(this object o)
         {
-            Contract.Requires(o != null);
-
             IDictionary<string, object> result = new Dictionary<string, object>();
             PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(o);
             foreach (PropertyDescriptor property in properties)
@@ -140,7 +136,10 @@ namespace Penguin.Reflection.Extensions
         /// <returns>A Json safe (hopefully) representation</returns>
         public static string ToJSONValue(this object o)
         {
-            Contract.Requires(o != null);
+            if (o is null)
+            {
+                throw new ArgumentNullException(nameof(o));
+            }
 
             string s = o.ToString();
             if (s == null || s.Length == 0)
@@ -242,8 +241,15 @@ namespace Penguin.Reflection.Extensions
         /// <param name="dest">The destination of the property values</param>
         public static void Populate(this object source, object dest)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(dest != null);
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (dest is null)
+            {
+                throw new ArgumentNullException(nameof(dest));
+            }
 
             Type sourceType = source.GetType();
             Type destType = dest.GetType();
