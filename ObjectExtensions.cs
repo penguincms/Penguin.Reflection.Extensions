@@ -253,7 +253,8 @@ namespace Penguin.Reflection.Extensions
 
             Type sourceType = source.GetType();
             Type destType = dest.GetType();
-            PropertyInfo[] sourceProps = sourceType.GetProperties();
+
+            PropertyInfo[] sourceProps = sourceType.GetProperties().Where(ValidatePropertyBind).ToArray();
 
             if (sourceType == destType)
             {
@@ -279,6 +280,11 @@ namespace Penguin.Reflection.Extensions
                     }
                 }
             }
+        }
+
+        private static bool ValidatePropertyBind(PropertyInfo pi)
+        {
+            return pi.GetGetMethod() != null && pi.GetSetMethod() != null && pi.GetIndexParameters().Length == 0;
         }
     }
 }
