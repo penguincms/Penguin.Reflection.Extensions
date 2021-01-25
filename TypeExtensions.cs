@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -12,10 +11,8 @@ using System.Text;
 
 namespace Penguin.Reflection.Extensions
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
     public static partial class TypeExtensions
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// Returns a stack of all base types excluding the end type (like object)
@@ -481,11 +478,11 @@ namespace Penguin.Reflection.Extensions
 
                 sb.Append(type.FullName.To("`"));
 
-                sb.Append("<");
+                sb.Append('<');
 
                 sb.Append(string.Join(",", type.GetGenericArguments().Select(t => t.GetDeclaration())));
 
-                sb.Append(">");
+                sb.Append('>');
 
                 return sb.ToString();
             }

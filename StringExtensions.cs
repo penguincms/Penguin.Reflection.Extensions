@@ -1,7 +1,5 @@
-﻿using Penguin.Extensions.Strings.Compatibility;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -43,7 +41,7 @@ namespace Penguin.Reflection.Extensions
         private static IEnumerable<string> SplitEnumString(string toSplit)
         {
             string thisVal = string.Empty;
-            for (int i = 0; i < toSplit.Count(); i++)
+            for (int i = 0; i < toSplit.Length; i++)
             {
                 char c = toSplit[i];
 
