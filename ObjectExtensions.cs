@@ -44,16 +44,26 @@ namespace Penguin.Reflection.Extensions
             return result;
         }
 
-        public static void Invoke(this object o, string MethodName, BindingFlags flags, params object[] Parameters)
-        {
-            Invoke<object>(o, MethodName, flags, Parameters);
-        }
+        /// <summary>
+        /// Invokes a method on the object using the given name and parameters
+        /// </summary>
+        /// <param name="o">The object to invoke the method on</param>
+        /// <param name="MethodName">The name of the method</param>
+        /// <param name="flags">Binding flags used to find the method</param>
+        /// <param name="Parameters">Any method parameters</param>
+        public static void Invoke(this object o, string MethodName, BindingFlags flags, params object[] Parameters) => Invoke<object>(o, MethodName, flags, Parameters);
 
-        public static T Invoke<T>(string MethodName, params object[] Parameters)
-        {
-            return Invoke<T>(MethodName, BindingFlags.Public, BindingFlags.Instance, Parameters);
-        }
+        public static T Invoke<T>(string MethodName, params object[] Parameters) => Invoke<T>(MethodName, BindingFlags.Public, BindingFlags.Instance, Parameters);
 
+        /// <summary>
+        /// Invokes a method on the object using the given name and parameters
+        /// </summary>
+        /// <typeparam name="T">The method return type</typeparam>
+        /// <param name="o">The object to invoke the method on</param>
+        /// <param name="MethodName">The name of the method</param>
+        /// <param name="flags">Binding flags used to find the method</param>
+        /// <param name="Parameters">Any method parameters</param>
+        /// <returns>The method return</returns>
         public static T Invoke<T>(this object o, string MethodName, BindingFlags flags, params object[] Parameters)
         {
             if (o is null)
@@ -281,9 +291,13 @@ namespace Penguin.Reflection.Extensions
             }
         }
 
-        private static bool ValidatePropertyBind(PropertyInfo pi)
-        {
-            return pi.GetGetMethod() != null && pi.GetSetMethod() != null && pi.GetIndexParameters().Length == 0;
-        }
+        /// <summary>
+        /// Returns true if the object represents the default value for its type
+        /// </summary>
+        /// <param name="o">The object to test</param>
+        /// <returns>True if the object represents the default value for its type</returns>
+        public static bool IsDefaultValue(this object o) => o is null || Equals(o, o.GetType().GetDefaultValue());
+
+        private static bool ValidatePropertyBind(PropertyInfo pi) => pi.GetGetMethod() != null && pi.GetSetMethod() != null && pi.GetIndexParameters().Length == 0;
     }
 }

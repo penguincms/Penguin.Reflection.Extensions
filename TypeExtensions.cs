@@ -11,9 +11,10 @@ using System.Text;
 
 namespace Penguin.Reflection.Extensions
 {
-
     public static partial class TypeExtensions
     {
+        internal static ConcurrentDictionary<Type, Type> CollectionTypeCache = new ConcurrentDictionary<Type, Type>();
+
         /// <summary>
         /// Returns a stack of all base types excluding the end type (like object)
         /// </summary>
@@ -110,37 +111,61 @@ namespace Penguin.Reflection.Extensions
         }
 
         /// <summary>
-        /// Checks if a given type is anonymous
-        /// </summary>
-        /// <param name="type">The type to check</param>
-        /// <returns>True if the given type is anonymous</returns>
-        public static bool IsAnonymousType(this Type type)
-        {
-            if (type is null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            bool hasCompilerGeneratedAttribute = type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any();
-            bool nameContainsAnonymousType = type.FullName.Contains("AnonymousType");
-            bool isAnonymousType = hasCompilerGeneratedAttribute && nameContainsAnonymousType;
-
-            return isAnonymousType;
-        }
-
-        /// <summary>
         /// Searches the current assembly for all types implementing the generic base class where the base class parameter equals the specified type
         /// Ex FoundType : baseType&lt;thing&gt;
         /// </summary>
         /// <param name="baseType">The base type to search for</param>
         /// <param name="typeParameter">The type the base class must implement</param>
         /// <returns>The aforementioned list</returns>
-        public static IEnumerable<Type> GetAllTypesImplementingGenericBase(Type baseType, Type typeParameter)
-        {
-            return GetAllTypesImplementingGenericBase(baseType).Where(t => t.BaseType.GenericTypeArguments.Contains(typeParameter));
-        }
+        public static IEnumerable<Type> GetAllTypesImplementingGenericBase(Type baseType, Type typeParameter) => GetAllTypesImplementingGenericBase(baseType).Where(t => t.BaseType.GenericTypeArguments.Contains(typeParameter));
 
-        internal static ConcurrentDictionary<Type, Type> CollectionTypeCache = new ConcurrentDictionary<Type, Type>();
+        /// <summary>
+        /// Takes in an open type definition and finds all interfaces or base classes that define that open definition and returns them
+        /// </summary>
+        /// <param name="type">The type to check for implementations</param>
+        /// <param name="toFind">The open type definition to search for</param>
+        /// <returns>Each defined close type definition for the type being checked, that is an implementation of the search type</returns>
+        public static IEnumerable<Type> GetClosedImplementationsFor(this Type type, Type toFind)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (toFind is null)
+            {
+                throw new ArgumentNullException(nameof(toFind));
+            }
+
+            if (!toFind.IsGenericTypeDefinition)
+            {
+                throw new ArgumentException("This method can only be used on open type definitions");
+            }
+
+            if (toFind.IsInterface)
+            {
+                foreach (Type interfaceType in type.GetInterfaces())
+                {
+                    if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == toFind)
+                    {
+                        yield return interfaceType;
+                    }
+                }
+            }
+            else
+            {
+                Type toCheck = type;
+
+                do
+                {
+                    if (toCheck.IsGenericType && toCheck.GetGenericTypeDefinition() == toFind)
+                    {
+                        yield return toCheck;
+                    }
+                    toCheck = toCheck.BaseType;
+                } while (toCheck != null);
+            }
+        }
 
         /// <summary>
         /// Attempts to resolve a type representation of a collection to retrieve its core unit. Should work on things like Lists as well as Arrays
@@ -194,29 +219,6 @@ namespace Penguin.Reflection.Extensions
             CollectionTypeCache.TryAdd(type, itemType);
 
             return itemType;
-        }
-
-        /// <summary>
-        /// Checks if the type inherits from ICollection or a Generic ICollection
-        /// </summary>
-        /// <param name="t">The type to check</param>
-        /// <returns>If the type inherits from ICollection or a Generic ICollection</returns>
-        public static bool IsCollection(this Type t)
-        {
-            if (t is null)
-            {
-                throw new ArgumentNullException(nameof(t));
-            }
-
-            Type gType;
-            if ((gType = t.GetGenericArguments().FirstOrDefault()) != null)
-            {
-                return typeof(ICollection<>).MakeGenericType(gType).IsAssignableFrom(t);
-            }
-            else
-            {
-                return typeof(ICollection).IsAssignableFrom(t);
-            }
         }
 
         /// <summary>
@@ -276,14 +278,43 @@ namespace Penguin.Reflection.Extensions
         }
 
         /// <summary>
+        /// Returns a string that can be used to declare a type in code (ex System.Collections.Generic.List&lt;System.String&gt;)
+        /// </summary>
+        /// <param name="type">The type to get the declaration for</param>
+        /// <returns>The type declaration</returns>
+        public static string GetDeclaration(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (!type.GetGenericArguments().Any())
+            {
+                return type.FullName;
+            }
+            else
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.Append(type.FullName.To("`"));
+
+                sb.Append('<');
+
+                sb.Append(string.Join(",", type.GetGenericArguments().Select(t => t.GetDeclaration())));
+
+                sb.Append('>');
+
+                return sb.ToString();
+            }
+        }
+
+        /// <summary>
         /// Resolves the default value for a generic type. Dont know why this exists
         /// </summary>
         /// <typeparam name="T">The generic type to check</typeparam>
         /// <returns>The default value for the type</returns>
-        public static T GetDefaultValue<T>()
-        {
-            return default;
-        }
+        public static T GetDefaultValue<T>() => default;
 
         /// <summary>
         /// Attempts to get the default value for a type by creating an instance
@@ -353,62 +384,53 @@ namespace Penguin.Reflection.Extensions
         }
 
         /// <summary>
-        /// Takes in an open type definition and finds all interfaces or base classes that define that open definition and returns them
+        /// An easier to read way to check if a type implements an interface
         /// </summary>
-        /// <param name="type">The type to check for implementations</param>
-        /// <param name="toFind">The open type definition to search for</param>
-        /// <returns>Each defined close type definition for the type being checked, that is an implementation of the search type</returns>
-        public static IEnumerable<Type> GetClosedImplementationsFor(this Type type, Type toFind)
+        /// <typeparam name="T">The type to check</typeparam>
+        /// <param name="type">The type to check</param>
+        /// <returns>Whether or not the type implements the interface</returns>
+        public static bool ImplementsInterface<T>(this Type type) => type.ImplementsInterface(typeof(T));
+
+        /// <summary>
+        /// Checks if a given type is anonymous
+        /// </summary>
+        /// <param name="type">The type to check</param>
+        /// <returns>True if the given type is anonymous</returns>
+        public static bool IsAnonymousType(this Type type)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (toFind is null)
-            {
-                throw new ArgumentNullException(nameof(toFind));
-            }
+            bool hasCompilerGeneratedAttribute = type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any();
+            bool nameContainsAnonymousType = type.FullName.Contains("AnonymousType");
+            bool isAnonymousType = hasCompilerGeneratedAttribute && nameContainsAnonymousType;
 
-            if (!toFind.IsGenericTypeDefinition)
-            {
-                throw new ArgumentException("This method can only be used on open type definitions");
-            }
-
-            if (toFind.IsInterface)
-            {
-                foreach (Type interfaceType in type.GetInterfaces())
-                {
-                    if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == toFind)
-                    {
-                        yield return interfaceType;
-                    }
-                }
-            }
-            else
-            {
-                Type toCheck = type;
-
-                do
-                {
-                    if (toCheck.IsGenericType && toCheck.GetGenericTypeDefinition() == toFind)
-                    {
-                        yield return toCheck;
-                    }
-                    toCheck = toCheck.BaseType;
-                } while (toCheck != null);
-            }
+            return isAnonymousType;
         }
 
         /// <summary>
-        /// An easier to read way to check if a type implements an interface
+        /// Checks if the type inherits from ICollection or a Generic ICollection
         /// </summary>
-        /// <typeparam name="T">The type to check</typeparam>
-        /// <param name="type">The type to check</param>
-        /// <returns>Whether or not the type implements the interface</returns>
-        public static bool ImplementsInterface<T>(this Type type)
+        /// <param name="t">The type to check</param>
+        /// <returns>If the type inherits from ICollection or a Generic ICollection</returns>
+        public static bool IsCollection(this Type t)
         {
-            return type.ImplementsInterface(typeof(T));
+            if (t is null)
+            {
+                throw new ArgumentNullException(nameof(t));
+            }
+
+            Type gType;
+            if ((gType = t.GetGenericArguments().FirstOrDefault()) != null)
+            {
+                return typeof(ICollection<>).MakeGenericType(gType).IsAssignableFrom(t);
+            }
+            else
+            {
+                return typeof(ICollection).IsAssignableFrom(t);
+            }
         }
 
         /// <summary>
@@ -453,38 +475,6 @@ namespace Penguin.Reflection.Extensions
 
                 default:
                     return false;
-            }
-        }
-
-        /// <summary>
-        /// Returns a string that can be used to declare a type in code (ex System.Collections.Generic.List&lt;System.String&gt;)
-        /// </summary>
-        /// <param name="type">The type to get the declaration for</param>
-        /// <returns>The type declaration</returns>
-        public static string GetDeclaration(this Type type)
-        {
-            if (type is null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            if (!type.GetGenericArguments().Any())
-            {
-                return type.FullName;
-            }
-            else
-            {
-                StringBuilder sb = new StringBuilder();
-
-                sb.Append(type.FullName.To("`"));
-
-                sb.Append('<');
-
-                sb.Append(string.Join(",", type.GetGenericArguments().Select(t => t.GetDeclaration())));
-
-                sb.Append('>');
-
-                return sb.ToString();
             }
         }
 

@@ -8,7 +8,7 @@ namespace Penguin.Reflection.Extensions
     public static partial class ObjectExtensions
     {
         //--------------------------------------------------------------------------------
-        public static void RemoveAllEventHandlers(this object obj) { RemoveEventHandler(obj, ""); }
+        public static void RemoveAllEventHandlers(this object obj) => RemoveEventHandler(obj, "");
 
         //--------------------------------------------------------------------------------
         public static void RemoveEventHandler(this object obj, string EventName)
