@@ -83,6 +83,38 @@ namespace Penguin.Reflection.Extensions
                 return s;
             }
 
+            foreach(MethodInfo mi in t.GetMethods()) {
+                //Must be an explicit or implicit converter
+                if(mi.Name != "op_Implicit" && mi.Name != "op_Explicit")
+                {
+                    continue;
+                }
+
+                //Of which the return type matches out target type
+                if(mi.ReturnType != t)
+                {
+                    continue;
+                }
+
+                ParameterInfo[] parameters = mi.GetParameters();
+
+                //It must have a single parameter
+                if(parameters.Length != 1)
+                {
+                    continue;
+                }
+
+                //And that parameter must be a string
+                if(parameters[0].ParameterType != typeof(string))
+                {
+                    continue;
+                }
+
+                //This is our matching conversion method, 
+                //If we're still here.
+                return mi.Invoke(null, new object[] { s });
+            }
+
             if (t == typeof(bool))
             {
                 if (s == "1")
