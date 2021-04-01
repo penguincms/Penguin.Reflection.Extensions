@@ -423,14 +423,29 @@ namespace Penguin.Reflection.Extensions
             }
 
             Type gType;
-            if ((gType = t.GetGenericArguments().FirstOrDefault()) != null)
+
+            return (gType = t.GetGenericArguments().FirstOrDefault()) != null
+                ? typeof(ICollection<>).MakeGenericType(gType).IsAssignableFrom(t)
+                : typeof(ICollection).IsAssignableFrom(t);
+        }
+
+        /// <summary>
+        /// Checks if the type inherits from IList or a Generic IList
+        /// </summary>
+        /// <param name="t">The type to check</param>
+        /// <returns>If the type inherits from IList or a Generic IList</returns>
+        public static bool IsList(this Type t)
+        {
+            if (t is null)
             {
-                return typeof(ICollection<>).MakeGenericType(gType).IsAssignableFrom(t);
+                throw new ArgumentNullException(nameof(t));
             }
-            else
-            {
-                return typeof(ICollection).IsAssignableFrom(t);
-            }
+
+            Type gType;
+
+            return (gType = t.GetGenericArguments().FirstOrDefault()) != null
+                ? typeof(IList<>).MakeGenericType(gType).IsAssignableFrom(t)
+                : typeof(IList).IsAssignableFrom(t);
         }
 
         /// <summary>

@@ -11,8 +11,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="Penguin.Reflection.Abstractions" Version="5.0.2-TA9KKLU" />
-    <PackageReference Include="Penguin.Extensions.String" Version="5.0.2-TA9KKLU" />
+    <PackageReference Include="Penguin.Reflection.Abstractions" Version="5.0.2-TACG2R6" />
+    <PackageReference Include="Penguin.Extensions.String" Version="5.0.2-TACG2R6" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4">

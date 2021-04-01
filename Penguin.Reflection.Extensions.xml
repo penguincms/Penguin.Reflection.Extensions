@@ -235,6 +235,13 @@
             <param name="t">The type to check</param>
             <returns>If the type inherits from ICollection or a Generic ICollection</returns>
         </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsList(System.Type)">
+            <summary>
+            Checks if the type inherits from IList or a Generic IList
+            </summary>
+            <param name="t">The type to check</param>
+            <returns>If the type inherits from IList or a Generic IList</returns>
+        </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsDecimalType(System.Type)">
             <summary>
             Checks if the type supports decimal notation
