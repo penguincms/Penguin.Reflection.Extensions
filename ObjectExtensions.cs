@@ -8,10 +8,7 @@ using System.Text;
 
 namespace Penguin.Reflection.Extensions
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
     public static partial class ObjectExtensions
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// Converts an object to a dictionary and adds a property
@@ -69,6 +66,11 @@ namespace Penguin.Reflection.Extensions
             if (o is null)
             {
                 throw new ArgumentNullException(nameof(o));
+            }
+
+            if (Parameters is null)
+            {
+                throw new ArgumentNullException(nameof(Parameters));
             }
 
             Type t = o.GetType();
