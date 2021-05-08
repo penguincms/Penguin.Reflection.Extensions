@@ -12,7 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Penguin.Reflection.Abstractions" Version="5.0.4" />
-    <PackageReference Include="Penguin.Extensions.String" Version="5.0.4" />
+    <PackageReference Include="Penguin.Extensions.String" Version="5.0.6-TAEO1KM" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4">
