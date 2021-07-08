@@ -18,7 +18,10 @@ namespace Penguin.Reflection.Extensions
         /// <param name="s">The string value</param>
         /// <param name="IgnoreCase">Whether or not case should be ignored (enum)</param>
         /// <returns>A casted representation of the string value</returns>
-        public static T Convert<T>(this string s, bool IgnoreCase = false) => (T)s.Convert(typeof(T), IgnoreCase);
+        public static T Convert<T>(this string s, bool IgnoreCase = false)
+        {
+            return (T)s.Convert(typeof(T), IgnoreCase);
+        }
 
         private static bool IsValidEnumValue(string toCheck)
         {
@@ -83,15 +86,16 @@ namespace Penguin.Reflection.Extensions
                 return s;
             }
 
-            foreach(MethodInfo mi in t.GetMethods()) {
+            foreach (MethodInfo mi in t.GetMethods())
+            {
                 //Must be an explicit or implicit converter
-                if(mi.Name != "op_Implicit" && mi.Name != "op_Explicit")
+                if (mi.Name != "op_Implicit" && mi.Name != "op_Explicit")
                 {
                     continue;
                 }
 
                 //Of which the return type matches out target type
-                if(mi.ReturnType != t)
+                if (mi.ReturnType != t)
                 {
                     continue;
                 }
@@ -99,13 +103,13 @@ namespace Penguin.Reflection.Extensions
                 ParameterInfo[] parameters = mi.GetParameters();
 
                 //It must have a single parameter
-                if(parameters.Length != 1)
+                if (parameters.Length != 1)
                 {
                     continue;
                 }
 
                 //And that parameter must be a string
-                if(parameters[0].ParameterType != typeof(string))
+                if (parameters[0].ParameterType != typeof(string))
                 {
                     continue;
                 }
@@ -260,6 +264,9 @@ namespace Penguin.Reflection.Extensions
 
         private static HashSet<Type> CantChange { get; set; } = new HashSet<Type>();
 
-        static StringExtensions() => CantChange.Add(typeof(DateTimeOffset));
+        static StringExtensions()
+        {
+            CantChange.Add(typeof(DateTimeOffset));
+        }
     }
 }

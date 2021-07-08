@@ -8,17 +8,20 @@ namespace Penguin.Reflection.Extensions
     public static partial class ObjectExtensions
     {
         //--------------------------------------------------------------------------------
-        public static void RemoveAllEventHandlers(this object obj) => RemoveEventHandler(obj, "");
+        public static void RemoveAllEventHandlers(this object o)
+        {
+            RemoveEventHandler(o, "");
+        }
 
         //--------------------------------------------------------------------------------
-        public static void RemoveEventHandler(this object obj, string EventName)
+        public static void RemoveEventHandler(this object o, string EventName)
         {
-            if (obj == null)
+            if (o == null)
             {
                 return;
             }
 
-            Type t = obj.GetType();
+            Type t = o.GetType();
             List<FieldInfo> event_fields = t.GetTypeEventFields();
             EventHandlerList static_event_handlers = null;
 
@@ -36,10 +39,10 @@ namespace Penguin.Reflection.Extensions
                     // STATIC EVENT
                     if (static_event_handlers == null)
                     {
-                        static_event_handlers = t.GetStaticEventHandlerList(obj);
+                        static_event_handlers = t.GetStaticEventHandlerList(o);
                     }
 
-                    object idx = fi.GetValue(obj);
+                    object idx = fi.GetValue(o);
                     Delegate eh = static_event_handlers[idx];
                     if (eh == null)
                     {
@@ -55,7 +58,7 @@ namespace Penguin.Reflection.Extensions
                     EventInfo ei = t.GetEvent(fi.Name, TypeExtensions.AllBindings);
                     foreach (Delegate del in dels)
                     {
-                        ei.RemoveEventHandler(obj, del);
+                        ei.RemoveEventHandler(o, del);
                     }
                 }
                 else
@@ -64,13 +67,13 @@ namespace Penguin.Reflection.Extensions
                     EventInfo ei = t.GetEvent(fi.Name, TypeExtensions.AllBindings);
                     if (ei != null)
                     {
-                        object val = fi.GetValue(obj);
+                        object val = fi.GetValue(o);
                         Delegate mdel = (val as Delegate);
                         if (mdel != null)
                         {
                             foreach (Delegate del in mdel.GetInvocationList())
                             {
-                                ei.RemoveEventHandler(obj, del);
+                                ei.RemoveEventHandler(o, del);
                             }
                         }
                     }
