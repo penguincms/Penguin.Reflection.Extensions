@@ -20,6 +20,26 @@
             <param name="o">The object source</param>
             <returns>A dictionary of property names and values</returns>
         </member>
+        <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.Invoke(System.Object,System.String,System.Reflection.BindingFlags,System.Object[])">
+            <summary>
+            Invokes a method on the object using the given name and parameters
+            </summary>
+            <param name="o">The object to invoke the method on</param>
+            <param name="MethodName">The name of the method</param>
+            <param name="flags">Binding flags used to find the method</param>
+            <param name="Parameters">Any method parameters</param>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.Invoke``1(System.Object,System.String,System.Reflection.BindingFlags,System.Object[])">
+            <summary>
+            Invokes a method on the object using the given name and parameters
+            </summary>
+            <typeparam name="T">The method return type</typeparam>
+            <param name="o">The object to invoke the method on</param>
+            <param name="MethodName">The name of the method</param>
+            <param name="flags">Binding flags used to find the method</param>
+            <param name="Parameters">Any method parameters</param>
+            <returns>The method return</returns>
+        </member>
         <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.ToJSONValue(System.Object)">
             <summary>
             Attempts to string convert an object into a value that can be consumed by a json serializer
@@ -49,6 +69,13 @@
             </summary>
             <param name="source">The source of the property values</param>
             <param name="dest">The destination of the property values</param>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.IsDefaultValue(System.Object)">
+            <summary>
+            Returns true if the object represents the default value for its type
+            </summary>
+            <param name="o">The object to test</param>
+            <returns>True if the object represents the default value for its type</returns>
         </member>
         <member name="M:Penguin.Reflection.Extensions.StringExtensions.Convert``1(System.String,System.Boolean)">
             <summary>
@@ -112,13 +139,6 @@
             <param name="baseType">The base type to search for</param>
             <returns>All types implementing a generic base class</returns>
         </member>
-        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsAnonymousType(System.Type)">
-            <summary>
-            Checks if a given type is anonymous
-            </summary>
-            <param name="type">The type to check</param>
-            <returns>True if the given type is anonymous</returns>
-        </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetAllTypesImplementingGenericBase(System.Type,System.Type)">
             <summary>
             Searches the current assembly for all types implementing the generic base class where the base class parameter equals the specified type
@@ -128,19 +148,20 @@
             <param name="typeParameter">The type the base class must implement</param>
             <returns>The aforementioned list</returns>
         </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetClosedImplementationsFor(System.Type,System.Type)">
+            <summary>
+            Takes in an open type definition and finds all interfaces or base classes that define that open definition and returns them
+            </summary>
+            <param name="type">The type to check for implementations</param>
+            <param name="toFind">The open type definition to search for</param>
+            <returns>Each defined close type definition for the type being checked, that is an implementation of the search type</returns>
+        </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetCollectionType(System.Type)">
             <summary>
             Attempts to resolve a type representation of a collection to retrieve its core unit. Should work on things like Lists as well as Arrays
             </summary>
             <param name="type">The type to search</param>
             <returns>The unit type of the collection</returns>
-        </member>
-        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsCollection(System.Type)">
-            <summary>
-            Checks if the type inherits from ICollection or a Generic ICollection
-            </summary>
-            <param name="t">The type to check</param>
-            <returns>If the type inherits from ICollection or a Generic ICollection</returns>
         </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetConstants(System.Type)">
             <summary>
@@ -155,6 +176,13 @@
             </summary>
             <param name="type">The type to check</param>
             <returns>Its core type</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetDeclaration(System.Type)">
+            <summary>
+            Returns a string that can be used to declare a type in code (ex System.Collections.Generic.List&lt;System.String&gt;)
+            </summary>
+            <param name="type">The type to get the declaration for</param>
+            <returns>The type declaration</returns>
         </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetDefaultValue``1">
             <summary>
@@ -185,14 +213,6 @@
             <param name="thisInterface">The interface to check for</param>
             <returns>Whether or not the type implements the interface</returns>
         </member>
-        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetClosedImplementationsFor(System.Type,System.Type)">
-            <summary>
-            Takes in an open type definition and finds all interfaces or base classes that define that open definition and returns them
-            </summary>
-            <param name="type">The type to check for implementations</param>
-            <param name="toFind">The open type definition to search for</param>
-            <returns>Each defined close type definition for the type being checked, that is an implementation of the search type</returns>
-        </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.ImplementsInterface``1(System.Type)">
             <summary>
             An easier to read way to check if a type implements an interface
@@ -200,6 +220,27 @@
             <typeparam name="T">The type to check</typeparam>
             <param name="type">The type to check</param>
             <returns>Whether or not the type implements the interface</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsAnonymousType(System.Type)">
+            <summary>
+            Checks if a given type is anonymous
+            </summary>
+            <param name="type">The type to check</param>
+            <returns>True if the given type is anonymous</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsCollection(System.Type)">
+            <summary>
+            Checks if the type inherits from ICollection or a Generic ICollection
+            </summary>
+            <param name="t">The type to check</param>
+            <returns>If the type inherits from ICollection or a Generic ICollection</returns>
+        </member>
+        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsList(System.Type)">
+            <summary>
+            Checks if the type inherits from IList or a Generic IList
+            </summary>
+            <param name="t">The type to check</param>
+            <returns>If the type inherits from IList or a Generic IList</returns>
         </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsDecimalType(System.Type)">
             <summary>
@@ -214,13 +255,6 @@
             </summary>
             <param name="t">The type to check</param>
             <returns>Is the type numeric?</returns>
-        </member>
-        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetDeclaration(System.Type)">
-            <summary>
-            Returns a string that can be used to declare a type in code (ex System.Collections.Generic.List&lt;System.String&gt;)
-            </summary>
-            <param name="type">The type to get the declaration for</param>
-            <returns>The type declaration</returns>
         </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.IsStatic(System.Type)">
             <summary>

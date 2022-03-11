@@ -121,11 +121,11 @@ namespace Penguin.Reflection.Extensions
 
             if (t == typeof(bool))
             {
-                if (s == "1")
+                if (s == "1" || string.Equals(s, "yes", StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
-                else if (s == "0")
+                else if (s == "0" || string.Equals(s, "no", StringComparison.OrdinalIgnoreCase))
                 {
                     return false;
                 }
