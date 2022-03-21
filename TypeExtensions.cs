@@ -119,10 +119,7 @@ namespace Penguin.Reflection.Extensions
         /// <param name="baseType">The base type to search for</param>
         /// <param name="typeParameter">The type the base class must implement</param>
         /// <returns>The aforementioned list</returns>
-        public static IEnumerable<Type> GetAllTypesImplementingGenericBase(Type baseType, Type typeParameter)
-        {
-            return GetAllTypesImplementingGenericBase(baseType).Where(t => t.BaseType.GenericTypeArguments.Contains(typeParameter));
-        }
+        public static IEnumerable<Type> GetAllTypesImplementingGenericBase(Type baseType, Type typeParameter) => GetAllTypesImplementingGenericBase(baseType).Where(t => t.BaseType.GenericTypeArguments.Contains(typeParameter));
 
         /// <summary>
         /// Takes in an open type definition and finds all interfaces or base classes that define that open definition and returns them
@@ -320,10 +317,7 @@ namespace Penguin.Reflection.Extensions
         /// </summary>
         /// <typeparam name="T">The generic type to check</typeparam>
         /// <returns>The default value for the type</returns>
-        public static T GetDefaultValue<T>()
-        {
-            return default;
-        }
+        public static T GetDefaultValue<T>() => default;
 
         /// <summary>
         /// Attempts to get the default value for a type by creating an instance
@@ -398,10 +392,7 @@ namespace Penguin.Reflection.Extensions
         /// <typeparam name="T">The type to check</typeparam>
         /// <param name="type">The type to check</param>
         /// <returns>Whether or not the type implements the interface</returns>
-        public static bool ImplementsInterface<T>(this Type type)
-        {
-            return type.ImplementsInterface(typeof(T));
-        }
+        public static bool ImplementsInterface<T>(this Type type) => type.ImplementsInterface(typeof(T));
 
         /// <summary>
         /// Checks if a given type is anonymous

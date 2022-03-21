@@ -18,10 +18,7 @@ namespace Penguin.Reflection.Extensions
         /// <param name="s">The string value</param>
         /// <param name="IgnoreCase">Whether or not case should be ignored (enum)</param>
         /// <returns>A casted representation of the string value</returns>
-        public static T Convert<T>(this string s, bool IgnoreCase = false)
-        {
-            return (T)s.Convert(typeof(T), IgnoreCase);
-        }
+        public static T Convert<T>(this string s, bool IgnoreCase = false) => (T)s.Convert(typeof(T), IgnoreCase);
 
         private static bool IsValidEnumValue(string toCheck)
         {
