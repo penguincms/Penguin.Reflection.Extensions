@@ -3819,7 +3819,11 @@
     "Time": "0001-01-01T00:00:00"
   },
   "LocalProjectInfo": {
+<<<<<<< Updated upstream
     "$id": "165",
+=======
+    "$id": "163",
+>>>>>>> Stashed changes
     "$type": "Penguin.Management.Environment.LocalProjectInfo, Penguin.Management",
     "_localProject": "C:\\Penguin\\Repositories\\Penguin\\Penguin.Reflection.Extensions\\Penguin.Reflection.Extensions.Local.csproj",
     "_localSLN": "C:\\Penguin\\Repositories\\Penguin\\Penguin.Reflection.Extensions\\Penguin.Reflection.Extensions.Local.sln",
