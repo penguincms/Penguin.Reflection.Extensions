@@ -214,7 +214,7 @@ namespace Penguin.Reflection.Extensions
                     }
                     catch (InvalidCastException)
                     {
-                        CantChange.Add(t);
+                        _ = CantChange.Add(t);
                     }
                 }
 
@@ -263,7 +263,7 @@ namespace Penguin.Reflection.Extensions
 
         static StringExtensions()
         {
-            CantChange.Add(typeof(DateTimeOffset));
+            _ = CantChange.Add(typeof(DateTimeOffset));
         }
     }
 }

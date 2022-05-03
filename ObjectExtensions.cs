@@ -170,48 +170,50 @@ namespace Penguin.Reflection.Extensions
                 {
                     case '\\':
                     case '"':
-                        sb.Append('\\');
-                        sb.Append(c);
+                        _ = sb.Append('\\');
+                        _ = sb.Append(c);
                         break;
 
                     case '/':
-                        sb.Append('\\');
-                        sb.Append(c);
+                        _ = sb.Append('\\');
+                        _ = sb.Append(c);
                         break;
 
                     case '\b':
-                        sb.Append("\\b");
+                        _ = sb.Append("\\b");
                         break;
 
                     case '\t':
-                        sb.Append("\\t");
+                        _ = sb.Append("\\t");
                         break;
 
                     case '\n':
-                        sb.Append("\\n");
+                        _ = sb.Append("\\n");
                         break;
 
                     case '\f':
-                        sb.Append("\\f");
+                        _ = sb.Append("\\f");
                         break;
 
                     case '\r':
-                        sb.Append("\\r");
+                        _ = sb.Append("\\r");
                         break;
 
                     default:
                         if (c < ' ')
                         {
                             t = "000" + ((byte)c).ToString("X", CultureInfo.CurrentCulture);
-                            sb.Append("\\u" + t.Substring(t.Length - 4));
+                            _ = sb.Append("\\u" + t.Substring(t.Length - 4));
                         }
                         else
                         {
-                            sb.Append(c);
+                            _ = sb.Append(c);
                         }
+
                         break;
                 }
             }
+
             return sb.ToString();
         }
 

@@ -164,6 +164,7 @@ namespace Penguin.Reflection.Extensions
                     {
                         yield return toCheck;
                     }
+
                     toCheck = toCheck.BaseType;
                 } while (toCheck != null);
             }
@@ -219,7 +220,7 @@ namespace Penguin.Reflection.Extensions
                 }
             }
 
-            CollectionTypeCache.TryAdd(type, itemType);
+            _ = CollectionTypeCache.TryAdd(type, itemType);
 
             return itemType;
         }
@@ -300,13 +301,13 @@ namespace Penguin.Reflection.Extensions
             {
                 StringBuilder sb = new StringBuilder();
 
-                sb.Append(type.FullName.To("`"));
+                _ = sb.Append(type.FullName.To("`"));
 
-                sb.Append('<');
+                _ = sb.Append('<');
 
-                sb.Append(string.Join(",", type.GetGenericArguments().Select(t => t.GetDeclaration())));
+                _ = sb.Append(string.Join(",", type.GetGenericArguments().Select(t => t.GetDeclaration())));
 
-                sb.Append('>');
+                _ = sb.Append('>');
 
                 return sb.ToString();
             }

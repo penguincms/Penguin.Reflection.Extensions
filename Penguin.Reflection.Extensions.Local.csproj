@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
     <PackageProjectUrl>https://github.com/PenguinCMS/Penguin.Reflection.Extensions</PackageProjectUrl>
     <Version>5.0.5</Version>
     <Description>Reflective extensions for use in MetaData driven systems. Notable abilities include string casting to type variables (very inclusive) as well as methods like IsNumericType, IsDecimalType, GetDefaultValue, GetAllBases, GetCollectionType, and more.</Description>
