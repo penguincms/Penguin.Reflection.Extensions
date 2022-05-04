@@ -1,4 +1,4 @@
-﻿using Penguin.Extensions.Strings;
+﻿using Penguin.Extensions.String;
 using Penguin.Reflection.Abstractions;
 using System;
 using System.Collections;
@@ -82,12 +82,9 @@ namespace Penguin.Reflection.Extensions
         /// <returns>All CONST from the given type, casted to the specified type</returns>
         public static List<T> GetAllPublicConstantValues<T>(this Type type)
         {
-            if (type is null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            return type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+            return type is null
+                ? throw new ArgumentNullException(nameof(type))
+                : type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
                        .Where(fi => fi.IsLiteral && !fi.IsInitOnly && fi.FieldType is T)
                        .Select(x => (T)x.GetRawConstantValue())
                        .ToList();
@@ -119,7 +116,10 @@ namespace Penguin.Reflection.Extensions
         /// <param name="baseType">The base type to search for</param>
         /// <param name="typeParameter">The type the base class must implement</param>
         /// <returns>The aforementioned list</returns>
-        public static IEnumerable<Type> GetAllTypesImplementingGenericBase(Type baseType, Type typeParameter) => GetAllTypesImplementingGenericBase(baseType).Where(t => t.BaseType.GenericTypeArguments.Contains(typeParameter));
+        public static IEnumerable<Type> GetAllTypesImplementingGenericBase(Type baseType, Type typeParameter)
+        {
+            return GetAllTypesImplementingGenericBase(baseType).Where(t => t.BaseType.GenericTypeArguments.Contains(typeParameter));
+        }
 
         /// <summary>
         /// Takes in an open type definition and finds all interfaces or base classes that define that open definition and returns them
@@ -271,13 +271,9 @@ namespace Penguin.Reflection.Extensions
             {
                 return CoreType.Reference;
             }
-            else if (type.IsSubclassOf(typeof(Enum)))
-            {
-                return CoreType.Enum;
-            }
             else
             {
-                return CoreType.Value;
+                return type.IsSubclassOf(typeof(Enum)) ? CoreType.Enum : CoreType.Value;
             }
         }
 
@@ -318,7 +314,10 @@ namespace Penguin.Reflection.Extensions
         /// </summary>
         /// <typeparam name="T">The generic type to check</typeparam>
         /// <returns>The default value for the type</returns>
-        public static T GetDefaultValue<T>() => default;
+        public static T GetDefaultValue<T>()
+        {
+            return default;
+        }
 
         /// <summary>
         /// Attempts to get the default value for a type by creating an instance
@@ -332,12 +331,7 @@ namespace Penguin.Reflection.Extensions
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (type.IsValueType)
-            {
-                return Activator.CreateInstance(type);
-            }
-
-            return null;
+            return type.IsValueType ? Activator.CreateInstance(type) : null;
         }
 
         /// <summary>
@@ -375,16 +369,11 @@ namespace Penguin.Reflection.Extensions
                 throw new ArgumentNullException(nameof(thisInterface));
             }
 
-            if (thisInterface.IsGenericTypeDefinition)
-            {
-                return type.GetInterfaces().Any(x =>
+            return thisInterface.IsGenericTypeDefinition
+                ? type.GetInterfaces().Any(x =>
                        x.IsGenericType &&
-                       x.GetGenericTypeDefinition() == thisInterface);
-            }
-            else
-            {
-                return thisInterface.IsAssignableFrom(type);
-            }
+                       x.GetGenericTypeDefinition() == thisInterface)
+                : thisInterface.IsAssignableFrom(type);
         }
 
         /// <summary>
@@ -393,7 +382,10 @@ namespace Penguin.Reflection.Extensions
         /// <typeparam name="T">The type to check</typeparam>
         /// <param name="type">The type to check</param>
         /// <returns>Whether or not the type implements the interface</returns>
-        public static bool ImplementsInterface<T>(this Type type) => type.ImplementsInterface(typeof(T));
+        public static bool ImplementsInterface<T>(this Type type)
+        {
+            return type.ImplementsInterface(typeof(T));
+        }
 
         /// <summary>
         /// Checks if a given type is anonymous
@@ -504,12 +496,7 @@ namespace Penguin.Reflection.Extensions
         /// <returns></returns>
         public static bool IsStatic(this Type type)
         {
-            if (type is null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            return type.IsAbstract && type.IsSealed;
+            return type is null ? throw new ArgumentNullException(nameof(type)) : type.IsAbstract && type.IsSealed;
         }
 
         /// <summary>
@@ -520,12 +507,7 @@ namespace Penguin.Reflection.Extensions
         /// <returns>if the type is a subclass of the given type</returns>
         public static bool IsSubclassOf<T>(this Type type)
         {
-            if (type is null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            return type.IsSubclassOf(typeof(T));
+            return type is null ? throw new ArgumentNullException(nameof(type)) : type.IsSubclassOf(typeof(T));
         }
 
         /// <summary>

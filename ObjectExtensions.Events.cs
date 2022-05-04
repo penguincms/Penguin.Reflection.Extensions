@@ -8,7 +8,10 @@ namespace Penguin.Reflection.Extensions
     public static partial class ObjectExtensions
     {
         //--------------------------------------------------------------------------------
-        public static void RemoveAllEventHandlers(this object o) => RemoveEventHandler(o, "");
+        public static void RemoveAllEventHandlers(this object o)
+        {
+            RemoveEventHandler(o, "");
+        }
 
         //--------------------------------------------------------------------------------
         public static void RemoveEventHandler(this object o, string EventName)
@@ -65,7 +68,7 @@ namespace Penguin.Reflection.Extensions
                     if (ei != null)
                     {
                         object val = fi.GetValue(o);
-                        Delegate mdel = (val as Delegate);
+                        Delegate mdel = val as Delegate;
                         if (mdel != null)
                         {
                             foreach (Delegate del in mdel.GetInvocationList())
