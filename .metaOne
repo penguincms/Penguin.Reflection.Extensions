@@ -3818,6 +3818,15 @@
     "Result": null,
     "Time": "0001-01-01T00:00:00"
   },
-  "LocalProjectInfo": null,
+  "LocalProjectInfo": {
+    "$id": "165",
+    "$type": "Penguin.Management.Environment.LocalProjectInfo, Penguin.Management",
+    "_localProject": "D:\\Penguin\\Repositories\\Penguin\\Penguin.Reflection.Extensions\\Penguin.Reflection.Extensions.Local.csproj",
+    "_localSLN": "D:\\Penguin\\Repositories\\Penguin\\Penguin.Reflection.Extensions\\Penguin.Reflection.Extensions.Local.sln",
+    "LocalReferences": [
+      "..\\Penguin.Extensions.String\\Penguin.Extensions.String.Local.csproj",
+      "..\\Penguin.Reflection.Abstractions\\Penguin.Reflection.Abstractions.Local.csproj"
+    ]
+  },
   "Path": "C:\\Penguin\\Repositories\\Penguin\\Penguin.Reflection.Extensions"
 }
