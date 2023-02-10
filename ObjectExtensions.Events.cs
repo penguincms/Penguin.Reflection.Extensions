@@ -27,7 +27,7 @@ namespace Penguin.Reflection.Extensions
 
             foreach (FieldInfo fi in event_fields)
             {
-                if (!string.IsNullOrWhiteSpace(EventName) && string.Compare(EventName, fi.Name, true) != 0)
+                if (!string.IsNullOrWhiteSpace(EventName) && !string.Equals(EventName, fi.Name, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
