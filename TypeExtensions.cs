@@ -13,7 +13,7 @@ namespace Penguin.Reflection.Extensions
 {
     public static partial class TypeExtensions
     {
-        internal static ConcurrentDictionary<Type, Type> CollectionTypeCache = new ConcurrentDictionary<Type, Type>();
+        internal static ConcurrentDictionary<Type, Type> CollectionTypeCache = new();
 
         /// <summary>
         /// Returns a stack of all base types excluding the end type (like object)
@@ -197,7 +197,6 @@ namespace Penguin.Reflection.Extensions
                 {
                     if (!type.IsInterface)
                     {
-
                         foreach (Type t in type.GetAllBasesExcluding(typeof(object)))
                         {
                             if ((itemType = type.GetGenericArguments().FirstOrDefault()) != null)
@@ -263,17 +262,13 @@ namespace Penguin.Reflection.Extensions
             {
                 return CoreType.Collection;
             }
-            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
-            {
-                return CoreType.Dictionary;
-            }
-            else if (Type.GetTypeCode(type) == TypeCode.Object)
-            {
-                return CoreType.Reference;
-            }
             else
             {
-                return type.IsSubclassOf(typeof(Enum)) ? CoreType.Enum : CoreType.Value;
+                return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>)
+                    ? CoreType.Dictionary
+                    : Type.GetTypeCode(type) == TypeCode.Object
+                                    ? CoreType.Reference
+                                    : type.IsSubclassOf(typeof(Enum)) ? CoreType.Enum : CoreType.Value;
             }
         }
 
@@ -295,7 +290,7 @@ namespace Penguin.Reflection.Extensions
             }
             else
             {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
 
                 _ = sb.Append(type.FullName.To("`"));
 
@@ -326,12 +321,7 @@ namespace Penguin.Reflection.Extensions
         /// <returns>The default value for the type</returns>
         public static object GetDefaultValue(this Type type)
         {
-            if (type is null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            return type.IsValueType ? Activator.CreateInstance(type) : null;
+            return type is null ? throw new ArgumentNullException(nameof(type)) : type.IsValueType ? Activator.CreateInstance(type) : null;
         }
 
         /// <summary>
@@ -348,7 +338,7 @@ namespace Penguin.Reflection.Extensions
 
             string name = t.Name;
             int index = name.IndexOf('`');
-            return index == -1 ? name : name.Substring(0, index);
+            return index == -1 ? name : name[..index];
         }
 
         /// <summary>
@@ -359,17 +349,11 @@ namespace Penguin.Reflection.Extensions
         /// <returns>Whether or not the type implements the interface</returns>
         public static bool ImplementsInterface(this Type type, Type thisInterface)
         {
-            if (type is null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            if (thisInterface is null)
-            {
-                throw new ArgumentNullException(nameof(thisInterface));
-            }
-
-            return thisInterface.IsGenericTypeDefinition
+            return type is null
+                ? throw new ArgumentNullException(nameof(type))
+                : thisInterface is null
+                ? throw new ArgumentNullException(nameof(thisInterface))
+                : thisInterface.IsGenericTypeDefinition
                 ? type.GetInterfaces().Any(x =>
                        x.IsGenericType &&
                        x.GetGenericTypeDefinition() == thisInterface)
@@ -451,15 +435,11 @@ namespace Penguin.Reflection.Extensions
         /// <returns>Does the type support decimal notation?</returns>
         public static bool IsDecimalType(this Type t)
         {
-            switch (Type.GetTypeCode(t))
+            return Type.GetTypeCode(t) switch
             {
-                case TypeCode.Decimal:
-                case TypeCode.Double:
-                    return true;
-
-                default:
-                    return t == typeof(float);
-            }
+                TypeCode.Decimal or TypeCode.Double => true,
+                _ => t == typeof(float),
+            };
         }
 
         /// <summary>
@@ -469,24 +449,11 @@ namespace Penguin.Reflection.Extensions
         /// <returns>Is the type numeric?</returns>
         public static bool IsNumericType(this Type t)
         {
-            switch (Type.GetTypeCode(t))
+            return Type.GetTypeCode(t) switch
             {
-                case TypeCode.Byte:
-                case TypeCode.SByte:
-                case TypeCode.UInt16:
-                case TypeCode.UInt32:
-                case TypeCode.UInt64:
-                case TypeCode.Int16:
-                case TypeCode.Int32:
-                case TypeCode.Int64:
-                case TypeCode.Decimal:
-                case TypeCode.Double:
-                case TypeCode.Single:
-                    return true;
-
-                default:
-                    return false;
-            }
+                TypeCode.Byte or TypeCode.SByte or TypeCode.UInt16 or TypeCode.UInt32 or TypeCode.UInt64 or TypeCode.Int16 or TypeCode.Int32 or TypeCode.Int64 or TypeCode.Decimal or TypeCode.Double or TypeCode.Single => true,
+                _ => false,
+            };
         }
 
         /// <summary>

@@ -37,10 +37,7 @@ namespace Penguin.Reflection.Extensions
                 if (fi.IsStatic)
                 {
                     // STATIC EVENT
-                    if (static_event_handlers == null)
-                    {
-                        static_event_handlers = t.GetStaticEventHandlerList(o);
-                    }
+                    static_event_handlers ??= t.GetStaticEventHandlerList(o);
 
                     object idx = fi.GetValue(o);
                     Delegate eh = static_event_handlers[idx];
@@ -68,8 +65,7 @@ namespace Penguin.Reflection.Extensions
                     if (ei != null)
                     {
                         object val = fi.GetValue(o);
-                        Delegate mdel = val as Delegate;
-                        if (mdel != null)
+                        if (val is Delegate mdel)
                         {
                             foreach (Delegate del in mdel.GetInvocationList())
                             {

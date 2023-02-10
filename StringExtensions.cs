@@ -25,17 +25,7 @@ namespace Penguin.Reflection.Extensions
 
         private static bool IsValidEnumValue(string toCheck)
         {
-            if (string.IsNullOrWhiteSpace(toCheck))
-            {
-                return false;
-            }
-
-            if (int.TryParse(toCheck, out _) || char.IsLetter(toCheck[0]))
-            {
-                return true;
-            }
-
-            return false;
+            return !string.IsNullOrWhiteSpace(toCheck) && (int.TryParse(toCheck, out _) || char.IsLetter(toCheck[0]));
         }
 
         private static IEnumerable<string> SplitEnumString(string toSplit)
@@ -89,7 +79,7 @@ namespace Penguin.Reflection.Extensions
             foreach (MethodInfo mi in t.GetMethods())
             {
                 //Must be an explicit or implicit converter
-                if (mi.Name != "op_Implicit" && mi.Name != "op_Explicit")
+                if (mi.Name is not "op_Implicit" and not "op_Explicit")
                 {
                     continue;
                 }
@@ -114,38 +104,22 @@ namespace Penguin.Reflection.Extensions
                     continue;
                 }
 
-                //This is our matching conversion method, 
+                //This is our matching conversion method,
                 //If we're still here.
                 return mi.Invoke(null, new object[] { s });
             }
 
             if (t == typeof(bool))
             {
-                if (s == "1" || string.Equals(s, "yes", StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-                else if (s == "0" || string.Equals(s, "no", StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
-                else
-                {
-                    return bool.Parse(s);
-                }
+                return s == "1" || string.Equals(s, "yes", StringComparison.OrdinalIgnoreCase)
+                    ? true
+                    : s == "0" || string.Equals(s, "no", StringComparison.OrdinalIgnoreCase) ? false : (object)bool.Parse(s);
             }
 
             //I feel like this could be done better by leveraging system types.
             if (string.IsNullOrWhiteSpace(s) && t.IsValueType)
             {
-                if (t.IsValueType)
-                {
-                    return t.GetDefaultValue();
-                }
-                else
-                {
-                    return null;
-                }
+                return t.IsValueType ? t.GetDefaultValue() : null;
             }
 
             if (t is null)
@@ -178,7 +152,7 @@ namespace Penguin.Reflection.Extensions
                         else
                         {
                             long value = 0;
-                            Dictionary<string, long> EnumValues = new Dictionary<string, long>();
+                            Dictionary<string, long> EnumValues = new();
 
                             foreach (object val in Enum.GetValues(t))
                             {

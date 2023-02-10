@@ -138,12 +138,9 @@ namespace Penguin.Reflection.Extensions
 
             object result = toExecute.Invoke(o, Parameters);
 
-            if (!(result is T))
-            {
-                throw new InvalidCastException($"Method {MethodName} returned type {(result is null ? "null" : result.GetType().ToString())} but a return type of {typeof(T)} was expected.");
-            }
-
-            return (T)result;
+            return result is not T
+                ? throw new InvalidCastException($"Method {MethodName} returned type {(result is null ? "null" : result.GetType().ToString())} but a return type of {typeof(T)} was expected.")
+                : (T)result;
         }
 
         /// <summary>
@@ -166,7 +163,7 @@ namespace Penguin.Reflection.Extensions
 
             int i;
             int len = s.Length;
-            StringBuilder sb = new StringBuilder(len + 4);
+            StringBuilder sb = new(len + 4);
             string t;
 
             for (i = 0; i < len; i += 1)
@@ -209,7 +206,7 @@ namespace Penguin.Reflection.Extensions
                         if (c < ' ')
                         {
                             t = "000" + ((byte)c).ToString("X", CultureInfo.CurrentCulture);
-                            _ = sb.Append("\\u" + t.Substring(t.Length - 4));
+                            _ = sb.Append("\\u" + t[^4..]);
                         }
                         else
                         {
