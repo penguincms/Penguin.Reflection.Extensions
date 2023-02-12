@@ -20,26 +20,6 @@
             <param name="o">The object source</param>
             <returns>A dictionary of property names and values</returns>
         </member>
-        <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.Invoke(System.Object,System.String,System.Reflection.BindingFlags,System.Object[])">
-            <summary>
-            Invokes a method on the object using the given name and parameters
-            </summary>
-            <param name="o">The object to invoke the method on</param>
-            <param name="MethodName">The name of the method</param>
-            <param name="flags">Binding flags used to find the method</param>
-            <param name="Parameters">Any method parameters</param>
-        </member>
-        <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.Invoke``1(System.Object,System.String,System.Reflection.BindingFlags,System.Object[])">
-            <summary>
-            Invokes a method on the object using the given name and parameters
-            </summary>
-            <typeparam name="T">The method return type</typeparam>
-            <param name="o">The object to invoke the method on</param>
-            <param name="MethodName">The name of the method</param>
-            <param name="flags">Binding flags used to find the method</param>
-            <param name="Parameters">Any method parameters</param>
-            <returns>The method return</returns>
-        </member>
         <member name="M:Penguin.Reflection.Extensions.ObjectExtensions.ToJSONValue(System.Object)">
             <summary>
             Attempts to string convert an object into a value that can be consumed by a json serializer
@@ -76,24 +56,6 @@
             </summary>
             <param name="o">The object to test</param>
             <returns>True if the object represents the default value for its type</returns>
-        </member>
-        <member name="M:Penguin.Reflection.Extensions.StringExtensions.Convert``1(System.String,System.Boolean)">
-            <summary>
-            Attempts to convert a string to the specified type
-            </summary>
-            <typeparam name="T">The type to cast the return value as</typeparam>
-            <param name="s">The string value</param>
-            <param name="IgnoreCase">Whether or not case should be ignored (enum)</param>
-            <returns>A casted representation of the string value</returns>
-        </member>
-        <member name="M:Penguin.Reflection.Extensions.StringExtensions.Convert(System.String,System.Type,System.Boolean)">
-            <summary>
-            Converts a string to the requested type. Handles nullables.
-            </summary>
-            <param name="s">The string value</param>
-            <param name="t">The type to cast the value as</param>
-            <param name="IgnoreCase">Whether or not case should be ignored (enum)</param>
-            <returns></returns>
         </member>
         <member name="M:Penguin.Reflection.Extensions.StringExtensions.ToVariableName(System.String)">
             <summary>
@@ -176,13 +138,6 @@
             </summary>
             <param name="type">The type to check</param>
             <returns>Its core type</returns>
-        </member>
-        <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetDeclaration(System.Type)">
-            <summary>
-            Returns a string that can be used to declare a type in code (ex System.Collections.Generic.List&lt;System.String&gt;)
-            </summary>
-            <param name="type">The type to get the declaration for</param>
-            <returns>The type declaration</returns>
         </member>
         <member name="M:Penguin.Reflection.Extensions.TypeExtensions.GetDefaultValue``1">
             <summary>
