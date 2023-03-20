@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net7.0</TargetFrameworks>
-    <PackageProjectUrl>https://github.com/PenguinCms/Penguin.Reflection.Extensions</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/PenguinCMS/Penguin.Reflection.Extensions</PackageProjectUrl>
     <Version>5.0.5</Version>
     <Description>Reflective extensions for use in MetaData driven systems. Notable abilities include string casting to type variables (very inclusive) as well as methods like IsNumericType, IsDecimalType, GetDefaultValue, GetAllBases, GetCollectionType, and more.</Description>
     <AssemblyName>Penguin.Reflection.Extensions</AssemblyName>
@@ -12,8 +12,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="Penguin.Reflection.Abstractions" Version="5.0.6-TB7ZBM0" />
-    <PackageReference Include="Penguin.Extensions.String" Version="5.0.6-TB7ZBM0" />
+    <PackageReference Include="Penguin.Reflection.Abstractions" Version="5.2.0" />
+    <PackageReference Include="Penguin.Extensions.String" Version="5.2.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4">
